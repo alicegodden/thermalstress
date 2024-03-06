@@ -11,5 +11,7 @@ AG_RNAseq.Rmd
 
 # Python scripts for SnpEff outputs
 filter.py # Filtering SnpEff and SnpSift outputs
+
 tstvplot.py # Plotting Ts/Tv ratios output from SnpEff
+
 snpeff.py # Plotting variants from SnpEff and SnpSift outputs
