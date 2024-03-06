@@ -1,3 +1,5 @@
+# Title- goterms_socstress_godden.py
+# Author - Dr. Alice Godden
 import matplotlib.pyplot as plt
 import numpy as np
 
