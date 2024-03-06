@@ -1,5 +1,5 @@
 ---
-title: "Alice's RNA, sRNA and TE differential expression analyses in Zebrafish"
+title: "RNA, sRNA and TE differential expression analyses in Zebrafish- DR. Alice Godden"
 output: html_notebook
 editor_options: 
   chunk_output_type: console
