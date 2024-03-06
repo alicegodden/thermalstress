@@ -1,3 +1,5 @@
+# Title- average.py
+# Author - Dr. Alice Godden
 # put rows in numerical order
 # Read the content of merged_output.txt
 with open('merged_output.txt', 'r') as merged_file:
