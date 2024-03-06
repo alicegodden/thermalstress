@@ -1,3 +1,5 @@
+# Title- filter_retroseq.py
+# Author - Dr. Alice Godden
 def filter_vcf(input_vcf, output_vcf):
     with open(input_vcf, 'r') as infile, open(output_vcf, 'w') as outfile:
         header_lines = []
