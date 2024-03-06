@@ -1,4 +1,4 @@
-# Title- average.py
+# Title- boxplot.py
 # Author - Dr. Alice Godden
 # Import packages
 import matplotlib.pyplot as plt
