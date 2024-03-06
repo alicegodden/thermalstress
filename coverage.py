@@ -1,3 +1,5 @@
+# Title- coverage.py
+# Author - Dr. Alice Godden
 # plot the average coverage of each chromosome in a plot
 # import packages
 import matplotlib.pyplot as plt
