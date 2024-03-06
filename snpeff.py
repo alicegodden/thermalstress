@@ -1,4 +1,5 @@
-# make the location of the gene markers more accurate
+# Title- snpeff.py
+# Author - Dr. Alice Godden
 import matplotlib.pyplot as plt
 import pysam
 
