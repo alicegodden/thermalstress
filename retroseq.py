@@ -1,5 +1,6 @@
 # Title- retroseq.py
 # Author - Dr. Alice Godden
+# Import packages
 import matplotlib.pyplot as plt
 import pysam
 from adjustText import adjust_text
