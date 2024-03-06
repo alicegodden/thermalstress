@@ -1,5 +1,6 @@
 # Title- class_chart.py
 # Author - Dr. Alice Godden
+# Import packages
 import re
 import pandas as pd
 import matplotlib.pyplot as plt
