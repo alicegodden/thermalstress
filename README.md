@@ -28,6 +28,7 @@ tstvplot.py # Plotting Ts/Tv ratios output from SnpEff
 
 snpeff.py # Plotting variants from SnpEff and SnpSift outputs
 
+autobubble_goplot.py # Plotting go terms outputs (.csv from ShinyGO) with annotate p-values
 
 
 RETROSEQ analysis
@@ -39,6 +40,8 @@ retroseq.py # Plotting Retroseq outputs
 class_chart.py # Plotting bar chart of TEs by class
 
 goterms_socstress_godden.py # Plotting GO terms analyses from ShinyGo outputs
+
+ppi.py # plotting Retroseq insertion protein-protein interaction terms, where mutation hits a gene
 
 
 GENOME COVERAGE analysis
