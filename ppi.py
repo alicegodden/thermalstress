@@ -1,6 +1,6 @@
 # Title- ppi.py
 # Author - Dr. Alice Godden
-# Load packages
+# Import packages
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
