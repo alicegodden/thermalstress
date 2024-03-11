@@ -1,3 +1,6 @@
+# Title- autobubble_goplot.py
+# Author - Dr. Alice Godden
+# Import packages
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
