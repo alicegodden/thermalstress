@@ -8,7 +8,7 @@ Thermal stress Zebrafish genomics project
 
 # Social stress in Zebrafish transcriptome and sperm sRNAs - R notebook
 Godden_seq.Rmd
-ADD PHENOGRAM R SCRIPT
+
 
 # Thermal stress in Zebrafish gonads - R notebook for RNA-seq and sRNA analyses
 AG_RNAseq.Rmd
@@ -36,6 +36,8 @@ autobubble_goplot.py # Plotting go terms outputs (.csv from ShinyGO) with annota
 FISHTEA_annotate_family.py # Annotating the significantly differentially expressed TE families from TEtranscripts pipeline with chromosome and genomic co-ordinates
 
 FISHTEA_matching.py # Matching the TEs with genes that are overlapping in location
+
+FISHTEA_Phenogram_25.py # Plotting overlapping significantly DE genes and TEs on Zebrafish genome
 
 
 
