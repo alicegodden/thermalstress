@@ -20,7 +20,7 @@ Haploid analyses.Rmd
 
 # Python scripts 
 
-SNPEFF analysis
+# SNPEFF analysis
 
 filter.py # Filtering SnpEff and SnpSift outputs
 
@@ -28,7 +28,10 @@ tstvplot.py # Plotting Ts/Tv ratios output from SnpEff
 
 snpeff.py # Plotting variants from SnpEff and SnpSift outputs
 
-autobubble_goplot.py # Plotting go terms outputs (.csv from ShinyGO) with annotate p-values
+autobubble_goplot.py # Plotting go terms outputs (.csv from ShinyGO) with annotated p-values
+
+
+# FishTEA- Fish Transposable element analyzer scripts
 
 FISHTEA_annotate_family.py # Annotating the significantly differentially expressed TE families from TEtranscripts pipeline with chromosome and genomic co-ordinates
 
@@ -36,7 +39,7 @@ FISHTEA_matching.py # Matching the TEs with genes that are overlapping in locati
 
 
 
-RETROSEQ analysis
+# RETROSEQ analysis
 
 filter_retroseq.py # filtering on GQ and FL Retroseq outputs to filter vcf for most confident novel TE insertion calls
 
