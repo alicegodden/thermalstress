@@ -2,7 +2,7 @@
 # Subtitle: Fish transposable element analyzer
 # Author: Dr. Alice M. Godden
 
-# Step 1 of 4
+# Step 1 of 5
 import csv
 
 # Function to read TE_rmsk.gtf file and store start and end positions in a dictionary
@@ -63,7 +63,7 @@ if __name__ == "__main__":
     output_file = "sigTEs_positions.csv"
     match_and_write(csv_file, gtf_file, output_file)
 
-# Step 2 of 4
+# Step 2 of 5
 # Matching overlaping sig DE genes and sig DE TEs
 
 import pandas as pd
@@ -130,7 +130,7 @@ with open(log_file, "w") as f:
 
 print("\nMatching completed. Results saved to 'matched_TEchrom.csv'.")
 
-# Step 3 of 4
+# Step 3 of 5
 # Phenogram plotting results
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -203,7 +203,7 @@ plt.yticks(fontsize=18, fontweight='bold')
 plt.savefig("te_genes_dotplot.png", dpi=600)
 plt.show()
 
-# Step 4 of 4
+# Step 4 of 5
 # Plotting bar charts counting number of TE family/class counts
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -239,6 +239,59 @@ if __name__ == '__main__':
     plot_te_class_counts(te_class_counts)
 
     print(te_class_counts)
+
+# Step 5 of 5
+# for plotting by family
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+
+# set colorblind palette
+colorblind_palette = sns.color_palette("colorblind")
+
+def plot_te_class_counts(te_class_counts):
+    """Plots the counts of each TE class."""
+    sns.set_context("paper")
+    fig, ax = plt.subplots(figsize=(12, 12))
+    colors = []
+    for te_family in te_class_counts.index:
+        if ' ' in te_family in te_family:
+            colors.append(colorblind_palette[2])  # Blue
+        elif 'DNA' in te_family or 'Helitron' in te_family or 'hAT' in te_family\
+                or 'Dada' in te_family or 'CMC-Enspm' in te_family or 'Maverick' in te_family\
+                or 'PIF-Harbinger' in te_family or 'TcMar-Tc1' in te_family\
+                or 'P_' in te_family: # all DNA TE P is P_ because it picks up RNA TE pao otherwise
+            colors.append(colorblind_palette[3])  # Red
+        else:
+            colors.append(colorblind_palette[0])  # Default color
+    te_class_counts.plot(kind='bar', color=colors, ax=ax)
+    ax.set_xlabel('TE superfamily', fontsize=20, fontweight='bold')
+    ax.set_ylabel('Count', fontsize=20, fontweight='bold')
+    ax.set_title('TE superfamily Counts', fontsize=20, fontweight='bold')  # Optionally adjust the title
+    for tick in ax.get_xticklabels():
+        tick.set_fontsize(16)
+        tick.set_fontweight('bold')
+        tick.set_rotation(90)  # Rotate the x-axis text by 45 degrees
+    for tick in ax.get_yticklabels():
+        tick.set_fontsize(16)
+        tick.set_fontweight('bold')
+    plt.tight_layout()  # Adjust layout to prevent overlapping
+    plt.savefig('te_class_counts.png')  # Save the figure as PNG
+    plt.show()
+
+if __name__ == '__main__':
+    # Read the CSV file.
+    matched_df = pd.read_csv("matched_chromfilter.csv")
+
+    # Count the occurrences of each TE class.
+    te_class_counts = matched_df['TE_class'].value_counts()
+
+    # Plot the counts of each TE class and save the figure.
+    plot_te_class_counts(te_class_counts)
+
+    print(te_class_counts)
+
 
 # Centromere locations chrcen.txt
 # 1 33133433
