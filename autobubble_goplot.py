@@ -40,7 +40,7 @@ plt.title('DNA-seq: Retroseq insertions Testes temperature v control', fontweigh
 # KEGG pathways
 
 # Set x-ticks and labels to go_terms
-plt.xticks(np.arange(5, 65, 10))
+plt.xticks(np.arange(5, 65, 10)) # first number is first x tick, second is maximum number you want an x tick, third number is how often you want an x tick
 plt.yticks(np.arange(len(descriptions)), descriptions, fontweight='bold')
 
 # Set x-ticks and labels to go_terms
