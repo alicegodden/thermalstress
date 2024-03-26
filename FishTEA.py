@@ -3,65 +3,74 @@
 # Author: Dr. Alice M. Godden
 
 # Step 1 of 5
-import csv
+import pandas as pd
 
-# Function to read TE_rmsk.gtf file and store start and end positions in a dictionary
-def read_gtf_file(gtf_file):
-    te_positions = {}
-    with open(gtf_file, 'r') as file:
-        for line in file:
-            if line.startswith('#'):
-                continue
-            parts = line.strip().split('\t')
-            chromosome = parts[0]
-            attributes = parts[8].split(';')
-            te_id_parts = {}
-            for attr in attributes:
-                try:
-                    key, value = attr.strip().split(' ')
-                    te_id_parts[key] = value.strip('"')
-                except ValueError:
-                    continue
-            te_id = te_id_parts.get('gene_id')
-            family_id = te_id_parts.get('family_id')
-            class_id = te_id_parts.get('class_id')
-            if te_id and family_id and class_id:
-                start = int(parts[3])
-                end = int(parts[4])
-                te_key = (te_id, family_id, class_id)
-                if te_key in te_positions:
-                    te_positions[te_key].append((chromosome, start, end))
-                else:
-                    te_positions[te_key] = [(chromosome, start, end)]
-    return te_positions
+# Define file paths
+sigTEs_file = "sigTEs_positions_telescope_family_TESTES.csv"
+sigGenes_file = "te_genes.csv"
+log_file = "matching_log_ov.txt"
 
-# Function to match TE IDs from csv file with TE_rmsk.gtf file and create output
-def match_and_write(csv_file, gtf_file, output_file):
-    te_positions = read_gtf_file(gtf_file)
-    with open(csv_file, 'r') as csvfile, open(output_file, 'w') as output:
-        csv_reader = csv.reader(csvfile)
-        csv_writer = csv.writer(output)
-        next(csv_reader)  # Skip the header line
-        for row in csv_reader:
-            te_id_parts = row[0].split(':')
-            if len(te_id_parts) != 3:
-                print(f"Invalid TE name format in CSV file: {row[0]}")
-                continue
-            gene_id = te_id_parts[0]
-            family_id = te_id_parts[1]
-            class_id = te_id_parts[2]
-            te_key = (gene_id, family_id, class_id)
-            if te_key in te_positions:
-                for chromosome, start, end in te_positions[te_key]:
-                    csv_writer.writerow([chromosome, gene_id, family_id, class_id, start, end])
+# Read the CSV files
+print("Reading CSV files...")
+sigTEs_df = pd.read_csv(sigTEs_file)
+sigGenes_df = pd.read_csv(sigGenes_file)
 
+# Create an empty list to store the matched TEs and genes
+matched_records = []
 
-# Example usage
-if __name__ == "__main__":
-    csv_file = "socstress_sigDETEs.csv"
-    gtf_file = "GRCz11_Ensembl_rmsk_TE.gtf"
-    output_file = "sigTEs_positions.csv"
-    match_and_write(csv_file, gtf_file, output_file)
+# Iterate over each row in sigTEs_df
+print("Matching TEs with genes...")
+for index_TE, TE_row in sigTEs_df.iterrows():
+    TE_start = TE_row['TE_start']
+    TE_end = TE_row['TE_end']
+    TE_chromosome = TE_row['chromosome_TE']
+
+    # Iterate over each row in sigGenes_df
+    for index_gene, gene_row in sigGenes_df.iterrows():
+        gene_start = gene_row['Gene_start']
+        gene_end = gene_row['Gene_end']
+        gene_chromosome = gene_row['Gene_chromosome']
+
+        # Check if the chromosome information matches
+        if TE_chromosome == gene_chromosome:
+            # Check for overlap between TE and gene
+            if (TE_start <= gene_end) and (gene_start <= TE_end):
+                # Store the matched TE and gene information
+                matched_records.append({
+                    'chromosome_TE': TE_chromosome,
+                    'TE_name': TE_row['TE_name'],
+                    'TE_class': TE_row['TE_class'],
+                    'TE_family': TE_row['TE_family'],
+                    'TE_start': TE_start,
+                    'TE_end': TE_end,
+                    'Gene_ID': gene_row['Gene_ID'],
+                    'Gene_name': gene_row['Gene_name'],
+                    'Gene_start': gene_start,
+                    'Gene_end': gene_end,
+                    'Gene_chromosome': gene_chromosome
+                })
+
+    # Print progress update
+    print(f"Processed {index_TE + 1} out of {len(sigTEs_df)} TEs.", end="\r")
+
+# Create a DataFrame from the matched_records list
+matched_df = pd.DataFrame(matched_records)
+
+# Check if any matches were found
+if len(matched_df) == 0:
+    print("No TEs and genes are overlapping in position, sorry")
+else:
+    # Write the matched dataframe to a new CSV file
+    matched_df.to_csv("matched_TESTES.csv", index=False)
+
+    # Write log information to a log file
+    with open(log_file, "w") as f:
+        f.write("Matching TEs with genes completed.\n")
+        f.write(f"Number of TEs processed: {len(sigTEs_df)}\n")
+        f.write(f"Number of matched TEs and genes: {len(matched_df)}\n")
+
+    print("\nMatching completed. Results saved to 'matched_TESTES.csv'.")
+
 
 # Step 2 of 5
 # Matching overlaping sig DE genes and sig DE TEs
