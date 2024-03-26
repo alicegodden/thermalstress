@@ -1,6 +1,3 @@
-# Title: FishTEA Annotate sig TEs - family level
-# Subtitle: Step 1 of 2 of FishTEA 
-# Author: Dr. Alice M. Godden
 import csv
 
 # Function to read TE_rmsk.gtf file and store start and end positions in a dictionary
@@ -56,8 +53,8 @@ def match_and_write(csv_file, gtf_file, output_file):
 
 # Example usage
 if __name__ == "__main__":
-    csv_file = "socstress_sigDETEs.csv"
-    gtf_file = "GRCz11_Ensembl_rmsk_TE.gtf" #same as TETranscripts pipeline used
-    output_file = "sigTEs_positions.csv"
+    csv_file = "Testes_Telescope_convert.csv"
+    gtf_file = "GRCz11_Ensembl_rmsk_TE.gtf"
+    output_file = "sigTEs_positions_telescope_family_TESTES.csv"
     match_and_write(csv_file, gtf_file, output_file)
 
