@@ -201,7 +201,8 @@ for i, (chrom, end) in enumerate(end_data, start=1):
                 fill=False, zorder=0))
 
 # Set y-axis limit to start at 0 and end at the maximum value in the second column of end_data
-ax.set_ylim(0)
+#ax.set_ylim(0)
+ax.set_ylim(0, 80000000)
 ax.set_xlim(0.4, len(unique_chromosomes) + 0.6)
 
 # Show the plot
