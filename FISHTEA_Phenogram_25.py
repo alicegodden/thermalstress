@@ -1,14 +1,12 @@
-# Title: Phenogram for Zebrafish chromosomes
-# Subtile: Phenogram for overlapping significantly DE genes and TEs
-# Author: Dr. Alice M. Godden
-
 import matplotlib.pyplot as plt
 import pandas as pd
 from matplotlib.patches import Ellipse
 import seaborn as sns
 
-# Set the color palette to Set3
-set3_palette = sns.color_palette("tab20")
+# Set the colorblind-friendly color palette
+colorblind_palette = sns.color_palette("colorblind")
+diverging_colors = sns.color_palette("RdBu", 10)
+sns.palplot(diverging_colors)
 
 # Read the matched CSV file
 matched_df = pd.read_csv("matched_chromfilter.csv")
@@ -26,16 +24,38 @@ with open('chrom_end.txt') as f:
 # Create the plot
 fig, ax = plt.subplots(figsize=(15, 8))
 
-# Add scatter plot for TE locations
-ax.scatter(matched_df['chromosome_TE'], matched_df['TE_start'], label='TE locations', color=set3_palette[0], alpha=1, s=75)
+# Set colors based on TE_family column
+colors = []
+for family in matched_df['TE_family']:
+    if 'SINE' in family or 'LINE' in family or 'LTR' in family:
+        colors.append(diverging_colors[0])  # Blue
+    elif 'DNA' in family or 'RC' in family:
+        colors.append(diverging_colors[6])  # Red
+    else:
+        colors.append(diverging_colors[3])  # Green (default)
 
-# Add scatter plot for gene locations with a valid color and adjusted transparency
-ax.scatter(matched_df['Gene_chromosome'], matched_df['Gene_start'], label='Gene locations', color=set3_palette[1], alpha=0.7, s=25)
+# Add scatter plot for TE locations with different colors
+# Create a list to store marker sizes based on TE class
+marker_sizes = []
+for family in matched_df['TE_family']:
+    if 'SINE' in family or 'LINE' in family or 'LTR' in family:
+        marker_sizes.append(22)  # Marker size for Class II TEs
+    elif 'DNA' in family or 'RC' in family:
+        marker_sizes.append(40)  # Marker size for Class I TEs
+    else:
+        marker_sizes.append(0)  # Default marker size for other TEs
+
+# Add scatter plot for TE locations with different colors and adjusted marker size based on TE class
+te_scatter = ax.scatter(matched_df['chromosome_TE'], matched_df['TE_start'], color=colors, alpha=0.7, s=marker_sizes, zorder=2)
+
+# Add scatter plot for gene locations with a valid color and adjusted transparency and marker size
+ax.scatter(matched_df['Gene_chromosome'], matched_df['Gene_start'], label='Gene locations', color=diverging_colors[9], alpha=0.8, s=100)
+
 
 # Add centromere markers
 centromere_data = pd.read_csv('chrcen.txt', sep='\s+', header=None, names=['chromosome', 'cen_position'])
 for _, row in centromere_data.iterrows():
-    ax.plot(row['chromosome'], row['cen_position'], marker='D', markersize=5, color=set3_palette[2], zorder=2, alpha=1)
+    ax.plot(row['chromosome'], row['cen_position'], marker='D', markersize=5, color=colorblind_palette[7], zorder=2, alpha=1)
 
 # Set labels and title
 plt.xlabel('Chromosome', fontsize=18, fontweight='bold')
@@ -62,69 +82,25 @@ for i, (chrom, end) in enumerate(end_data, start=1):
                 fill=False, zorder=0))
 
 # Set y-axis limit to start at 0 and end at the maximum value in the second column of end_data
-ax.set_ylim(0)
+
+plt.margins(y=0.02)
+
 ax.set_xlim(0.4, len(unique_chromosomes) + 0.6)
 
+# Create custom legend
+legend_elements = [te_scatter,
+                   plt.Line2D([0], [0], marker='o', color='w', alpha=0.7, markerfacecolor=diverging_colors[0], markersize=8, zorder=0, label='DE Class II RNA TE'),
+                   plt.Line2D([0], [0], marker='o', color='w', alpha=0.7, markerfacecolor=diverging_colors[6], markersize=11, label='DE Class I DNA TE'),
+                   plt.Line2D([0], [0], marker='o', color='w', alpha=0.7, markerfacecolor=diverging_colors[9], markersize=15, label='DE Gene'),
+                   plt.Line2D([0], [0], marker='D', color='w', alpha=1, markersize=6, markerfacecolor=colorblind_palette[7], markeredgewidth=0, label='Centromere')
+                   ]
+
+# Add legend with custom elements
+ax.legend(handles=legend_elements, loc='upper right', fontsize=12)
+
 # Show the plot
-plt.legend()
 plt.tight_layout()
 plt.xticks(fontsize=18, fontweight='bold')
 plt.yticks(fontsize=18, fontweight='bold')
-plt.savefig("te_genes_dotplot.png", dpi=600)
+plt.savefig("te_genes_plot_phenogram_socstress.png", dpi=600)
 plt.show()
-
-
-# Centromere locations chrcen.txt
-# 1 33133433
-# 2 19743539
-# 3 49120158
-# 4 25975534
-# 5 50391699
-# 6 34866988
-# 7 60898697
-# 8 30099230
-# 9 13283057
-# 10 9894335
-# 11 9507769
-# 12 27779269
-# 13 19555524
-# 14 16933009
-# 15 13943685
-# 16 19463555
-# 17 48225166
-# 18 24528805
-# 19 19777257
-# 20 11319545
-# 21 28908825
-# 22 21520944
-# 23 13631408
-# 24 15196971
-# 25 20793603
-
-# Chromosome length chrom_end.txt
-# 1 59578282
-# 2 59640629
-# 3 62628489
-# 4 78093715
-# 5 72500376
-# 6 60270059
-# 7 74282399
-# 8 54304671
-# 9 56459846
-# 10 45420867
-# 11 45484837
-# 12 49182954
-# 13 52186027
-# 14 52660232
-# 15 48040578
-# 16 55266484
-# 17 53461100
-# 18 51023478
-# 19 48449771
-# 20 55201332
-# 21 45934066
-# 22 39133080
-# 23 46223584
-# 24 42172926
-# 25 37502051
-
