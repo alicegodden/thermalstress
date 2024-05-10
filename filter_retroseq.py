@@ -35,7 +35,7 @@ def filter_vcf(input_vcf, output_vcf):
     print(f"Filtered data has been written to {output_vcf}")
 
 # Replace these with your actual input and output filenames
-input_vcf = 'FILTERmerged_with_header_USEMEBABY_win150_int_filteredHEADER.vcf'
-output_vcf = 'HEADERFILTERPY_merged_with_header_USEMEBABY_win150_int_filtered.vcf'
+input_vcf = 'FILTERmerged_with_header_USEME_win150_int_filteredHEADER.vcf'
+output_vcf = 'HEADERFILTERPY_merged_with_header_USEME_win150_int_filtered.vcf'
 
 filter_vcf(input_vcf, output_vcf)
