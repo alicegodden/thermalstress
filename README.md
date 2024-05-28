@@ -53,6 +53,8 @@ goterms_socstress_godden.py # Plotting GO terms analyses from ShinyGo outputs
 
 ppi.py # plotting Retroseq insertion protein-protein interaction terms, where mutation hits a gene
 
+chrom_rename.py # For renaming chromosomes to numeric IDs to match Ensembl formatting GRCz11 genome
+
 
 GENOME COVERAGE analysis
 
