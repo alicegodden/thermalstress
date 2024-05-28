@@ -1,11 +1,10 @@
 # Title- class_chart.py
 # Author - Dr. Alice Godden
 # Import packages
+
 import re
 import pandas as pd
 import matplotlib.pyplot as plt
-import seaborn as sns
-
 
 def extract_meinfo(line):
   """Extracts the MEINFO value from a line of VCF text."""
@@ -33,18 +32,27 @@ def count_meinfo_words(meinfo_values, words):
   return meinfo_word_counts
 
 def plot_meinfo_word_counts(meinfo_word_counts):
-  """Plots the counts of each MEINFO word."""
+  """Plots the counts of each MEINFO word with customizations."""
 
   meinfo_word_counts = pd.Series(meinfo_word_counts)
   meinfo_word_counts.plot(kind='bar')
-  plt.xlabel('MEINFO word')
-  plt.ylabel('Count')
-  plt.title('MEINFO word counts')
-  plt.show()
+
+  # Make text bold
+  plt.xlabel('TE Class', fontweight='bold')  # Make x-axis label bold
+  plt.ylabel('Count', fontweight='bold')  # Make y-axis label bold
+  plt.title('Central', fontweight='bold')  # Make title bold
+
+  # Rotate x-axis labels by 45 degrees
+  plt.xticks(rotation=45, ha='right', fontweight = 'bold')  # Rotate x-axis labels by 45 degrees
+  plt.yticks(fontweight = 'bold')
+  plt.tight_layout()  # Adjust spacing for better layout
+
+
+
 
 if __name__ == '__main__':
   # Read the VCF file.
-  with open('FT_HEADERFILTERPY_merged_with_header_USEMEBABY_win150_int_filtered.vcf', 'r') as f:
+  with open('C_retroseq_intersect_win150.vcf_filtered_CHROM.vcf', 'r') as f:
     vcf_lines = f.readlines()
 
   # Extract the MEINFO values from the VCF lines.
@@ -58,14 +66,12 @@ if __name__ == '__main__':
   words = ['LINE', 'LTR', 'DNA', 'SATELLITE', 'SINE', 'RC']
   meinfo_word_counts = count_meinfo_words(meinfo_values, words)
 
-  # Plot the counts of each word.
+  # Plot the counts of each word with customizations
   plot_meinfo_word_counts(meinfo_word_counts)
-
- # sns.boxplot(data= meinfo_word_counts)
-  #plt.show()
-  #plt.close()
 
   print(meinfo_word_counts)
 
-
-
+# save the file
+output_file = 'C_retroseq_intersect_win150_chrom_counts.png'  # Replace with your desired filename and extension
+plt.savefig(output_file)
+plt.show()
