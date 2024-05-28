@@ -45,7 +45,7 @@ FISHTEA_Phenogram_25.py # Plotting overlapping significantly DE genes and TEs on
 
 filter_retroseq.py # filtering on GQ and FL Retroseq outputs to filter vcf for most confident novel TE insertion calls
 
-retroseq.py # Plotting Retroseq outputs
+retroseq.py and vcfinput_phenogram.py (for chromosome shapes) # Plotting Retroseq outputs
 
 class_chart.py # Plotting bar chart of TEs by class
 
