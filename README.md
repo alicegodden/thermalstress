@@ -62,5 +62,7 @@ GENOME COVERAGE analysis
 average.py , coverage.py, violinplot.py and boxplot.py # For summarising the average depth from samtools and making plots to analyse this by chromosome at whole genome level
 
 # Polar bear analysis
-bearphenogram.py # Plotting a basic phenogram of a list of significantly differentially expressed TEs from Telescope outputs, genom ASM1731132v1
+
+bearphenogram.py # Plotting a basic phenogram of a list of significantly differentially expressed TEs from Telescope outputs, genome ASM1731132v1
+
 chrom_end_bear.txt # Chromosome/scaffold legnths text file, genome ASM1731132v1 
