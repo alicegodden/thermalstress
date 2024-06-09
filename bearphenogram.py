@@ -4,7 +4,10 @@
 # Notes
 # Used grep on command line along with the TE.rmsk.gtf annotation file to find genomic co-ordinates of sig DE TEs, saved this as a list .csv file.
 
-#Import libraries 
+# Title: Bear phenogram
+# Author : Dr. Alice M. Godden
+
+#Import libraries
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -51,7 +54,7 @@ for index, row in chrom_end_df_filtered.iterrows():
         end = point_row["End"]
         element_type = point_row["Name"].split("#")[1].split("/")[0]  # Extract element type from the Name column
         color = element_colors.get(element_type, "gray")  # Use gray color if element type is not found in the dictionary
-        plt.scatter([start, end], [chrom, chrom], color=color, alpha=0.6)
+        plt.scatter([start, end], [chrom, chrom], color=color, alpha=0.6, zorder=10)
         # Add to legend only if it hasn't been added before
         if element_type not in legend_labels:
             legend_handles.append(plt.scatter([], [], color=color, label=element_type, alpha = 0.6))
@@ -66,4 +69,5 @@ plt.xticks(fontweight='bold')
 plt.legend(handles=legend_handles, title="TE Class")
 plt.gca().invert_yaxis()  # Invert y-axis to plot chromosomes from top to bottom
 plt.grid(False)  # Remove gridlines
-plt.show()
+plt.savefig('polarbear_newgen_Adult_telescope_sig_deTEs.png', dpi=600, bbox_inches='tight')
+
