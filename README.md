@@ -40,6 +40,8 @@ FISHTEA_matching.py # Matching the TEs with genes that are overlapping in locati
 
 FISHTEA_Phenogram_25.py # Plotting overlapping significantly DE genes and TEs on Zebrafish genome
 
+FISHTEA_chromatin_phenogram.py # plotting open/accessible regions of the genome 
+
 
 
 # RETROSEQ analysis
