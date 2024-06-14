@@ -147,3 +147,80 @@ final_plot <- do.call(gridExtra::grid.arrange, c(plots, ncol = 2))  # Adjust nco
 # Show the final plot
 final_plot
 
+#To control the y axes limits for each plot
+# Load necessary libraries
+library(reshape)
+library(ggplot2)
+library(viridis)
+library(hrbrthemes)
+library(tidyverse)
+library(gridExtra)
+
+# Print session information for debugging purposes
+sessionInfo()
+
+# Define a function to process input files and generate plots
+process_input_file <- function(file_path, title, genomes_size, y_limit) {
+  # Read the input file
+  KimuraDistance <- read.csv(file_path, sep = " ")
+  
+  # Melt the data frame
+  kd_melt <- melt(KimuraDistance, id = "Div")
+  kd_melt$norm <- kd_melt$value / genomes_size * 100
+  
+  # Create a new column based on substring matches
+  kd_melt$group <- ifelse(grepl("DNA", kd_melt$variable), "DNA",
+                          ifelse(grepl("LINE", kd_melt$variable), "LINE",
+                                 ifelse(grepl("LTR", kd_melt$variable), "LTR",
+                                        ifelse(grepl("SINE", kd_melt$variable), "SINE",
+                                               ifelse(grepl("RC", kd_melt$variable), "RC",
+                                                      ifelse(grepl("Satellite", kd_melt$variable), "Satellite",
+                                                             ifelse(grepl("Retrotransposon", kd_melt$variable), "Retrotransposon", NA)))))))
+  
+  # Filter out NA rows
+  kd_melt_filtered <- kd_melt[!is.na(kd_melt$group), ]
+  
+  # Define a custom color palette using Viridis "magma" color scheme
+  group_colors <- magma(length(unique(kd_melt_filtered$group)))
+  names(group_colors) <- unique(kd_melt_filtered$group)
+  
+  # Create ggplot object
+  gg <- ggplot(kd_melt_filtered, aes(fill = group, y = norm, x = Div)) + 
+    geom_bar(position = "stack", stat = "identity", color = FALSE) +
+    scale_fill_manual(values = group_colors) +
+    theme_classic() +
+    xlab("Kimura substitution level (CpG adjusted)") +
+    ylab("Percent of the genome (%)") + 
+    labs(fill = "") +
+    coord_cartesian(xlim = c(0, 30), ylim = c(0, y_limit)) +
+    ggtitle(paste("RNA-seq:", title, "Kimura Substitution Level")) +
+    theme(
+      axis.text = element_text(size = 11, face = "bold", color = "black"), 
+      axis.title = element_text(size = 12, face = "bold"),
+      legend.text = element_text(face = "bold"),
+      plot.title = element_text(face = "bold"),
+      panel.grid.major = element_line(size = 0.1, linetype = 'solid', color = "gray"),  # Customize major gridlines
+      panel.grid.minor = element_line(size = 0.05, linetype = 'solid', color = "gray")  # Customize minor gridlines
+    )
+  
+  return(gg)
+}
+
+# File paths, titles, genome sizes, and y-axis limits
+file_paths <- c("FC_all.divsum.csv", "FT_all.divsum.csv", "MC_all.divsum.csv", "MT_all.divsum.csv")
+titles <- c("Ovaries Control", "Ovaries Temperature", "Testes Control", "Testes Temperature")
+genomes_sizes <- c(39199570013, 40253710347, 41736660246, 44745217617)
+y_limits <- c(1.7, 1.7, 7, 7)  # y-axis limits for each plot
+
+# Create a list to store individual ggplot objects
+plots <- lapply(seq_along(file_paths), function(i) {
+  process_input_file(file_paths[i], titles[i], genomes_sizes[i], y_limits[i])
+})
+
+# Combine plots using grid.arrange
+final_plot <- do.call(gridExtra::grid.arrange, c(plots, ncol = 2))  # Adjust ncol as needed
+
+# Show the final plot
+final_plot
+
+
