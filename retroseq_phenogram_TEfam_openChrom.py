@@ -149,3 +149,12 @@ plt.savefig(output_file)
 plt.show()
 
 # Note: chromatin accessibility track:
+# chromatin track was accessed from DANIO code hub_280355_dopes_all on UCSC browser
+# Unmarked open chromatin regions
+# This collection contains two tracks with regions which have an ATAC-seq signal, but without observable CRE-associated chromatin marks.
+#
+# COPEs: Constitutive Orphan Predicted Elements (COPEs) are regions which are constitutively open throughout development.
+#
+# pooled DOPEs: Dynamic Orphan Predicted Elements (DOPEs) are regions which are open only in specific developmental stages. DOPEs from all stages were pooled together into this track.
+#
+# For more information about the origin of the data, see our publication: Baranasic, Damir, et al. "Integrated annotation and analysis of genomic features reveal new types of functional elements and large-scale epigenetic phenomena in the developing zebrafish."
