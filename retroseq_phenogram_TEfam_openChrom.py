@@ -145,7 +145,7 @@ plt.legend(handles=legend_elements, fontsize=12, loc='upper right')
 
 # Save and display the plot
 output_file = 'overlay_plot_with_centromere_alpha.png'  # Replace with your desired filename and extension
-plt.savefig(output_file)
+plt.savefig(output_file, dpi=600)
 plt.show()
 
 # Note: chromatin accessibility track:
