@@ -50,6 +50,8 @@ filter_retroseq.py # filtering on GQ and FL Retroseq outputs to filter vcf for m
 
 retroseq.py and vcfinput_phenogram.py (for chromosome shapes) # Plotting Retroseq outputs
 
+retroseq_phenogram_TEcolours.py # Plotting Retroseq outputs and grouping TE's by family, plotting points in colours based on family
+
 class_chart.py # Plotting bar chart of TEs by class
 
 goterms_socstress_godden.py # Plotting GO terms analyses from ShinyGo outputs
