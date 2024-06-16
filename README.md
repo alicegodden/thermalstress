@@ -12,6 +12,7 @@ Godden_seq.Rmd
 
 # Thermal stress in Zebrafish gonads - R notebook for RNA-seq and sRNA analyses
 AG_RNAseq.Rmd
+
 telescopeCounts.R - Telescope output readin to make universal counts file across multiple samples
 
 
