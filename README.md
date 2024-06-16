@@ -53,6 +53,8 @@ retroseq.py and vcfinput_phenogram.py (for chromosome shapes) # Plotting Retrose
 
 retroseq_phenogram_TEcolours.py # Plotting Retroseq outputs and grouping TE's by family, plotting points in colours based on family
 
+retroseq_phenogram_TEfam_openChrom.py # As above but with the addition of a chromatin accessibility track
+
 class_chart.py # Plotting bar chart of TEs by class
 
 goterms_socstress_godden.py # Plotting GO terms analyses from ShinyGo outputs
