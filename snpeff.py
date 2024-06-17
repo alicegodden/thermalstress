@@ -1,3 +1,7 @@
+# Title: Phenogram of SnpEff and SnpSift outputs
+# Subtitle: Rocket colour scheme
+# Author: Dr. Alice M. Godden
+
 import matplotlib.pyplot as plt
 import pysam
 import seaborn as sns
