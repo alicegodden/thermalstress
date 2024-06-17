@@ -55,7 +55,9 @@ retroseq_phenogram_TEcolours.py # Plotting Retroseq outputs and grouping TE's by
 
 retroseq_phenogram_TEfam_openChrom.py # As above but with the addition of a chromatin accessibility track
 
-class_chart.py # Plotting bar chart of TEs by class
+class_chart.py # Plotting bar chart of TEs by class/family
+
+te_family_retroseq.py # Plotting bar chart of TEs by family, rocket colour scheme
 
 goterms_socstress_godden.py # Plotting GO terms analyses from ShinyGo outputs
 
