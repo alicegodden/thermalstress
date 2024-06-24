@@ -20,10 +20,10 @@ def extract_chrom_pos_from_vcf(vcf_file):
 
 # Replace with your VCF file paths
 vcf_files = [
-    'FC_HEADERFILTERPY_merged_with_header_USEMEBABY_win150_int_filtered.vcf',
-    'FT_HEADERFILTERPY_merged_with_header_USEMEBABY_win150_int_filtered.vcf',
-    'MC_HEADERFILTERPY_merged_with_header_USEMEBABY_win150_int_filtered.vcf',
-    'MT_HEADERFILTERPY_merged_with_header_USEMEBABY_win150_int_filtered.vcf'
+    'FC_HEADERFILTERPY_merged_with_header_win150_int_filtered.vcf',
+    'FT_HEADERFILTERPY_merged_with_header_win150_int_filtered.vcf',
+    'MC_HEADERFILTERPY_merged_with_header_win150_int_filtered.vcf',
+    'MT_HEADERFILTERPY_merged_with_header_win150_int_filtered.vcf'
 ]
 # Corresponding sample names
 sample_names = [
