@@ -66,6 +66,8 @@ ppi.py # plotting Retroseq insertion protein-protein interaction terms, where mu
 
 chrom_rename.py # For renaming chromosomes to numeric IDs to match Ensembl formatting GRCz11 genome
 
+TE_Chrom_count.py # Counting and plotting number of non-reference TE insertions mutations per chromosome
+
 
 GENOME COVERAGE analysis
 
