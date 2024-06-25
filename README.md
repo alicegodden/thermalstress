@@ -31,6 +31,8 @@ tstvplot.py # Plotting Ts/Tv ratios output from SnpEff
 
 snpeff.py # Plotting variants from SnpEff and SnpSift outputs
 
+vcfinput_phenogram.py # Phenogram plot
+
 autobubble_goplot.py # Plotting go terms outputs (.csv from ShinyGO) with annotated p-values
 
 
