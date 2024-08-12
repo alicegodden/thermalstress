@@ -1,6 +1,6 @@
 # Title: Removing non-unique rows from experimental retroseq vcf files
+# Subtitle: Based on first 4 columns only
 # Author: Dr. Alice M. Godden
-
 
 import sys
 
@@ -12,7 +12,10 @@ def read_vcf(filename):
             if line.startswith("#"):
                 headers.append(line)
             else:
-                data.append(line.strip())
+                columns = line.strip().split('\t')
+                # Extract the first four columns: CHROM, POS, ID, REF
+                key = '\t'.join(columns[:4])
+                data.append(key)
         return headers, data
 
 def check_uniqueness(data):
@@ -41,9 +44,9 @@ def write_vcf(headers, unique_data, output_file):
 def main():
     exp_file = "samplesMaleTemperature_nomdups_call.out.vcf"
     ctrl_file = "samplesMaleControl_nomdups_call.out.vcf"
-    output_file = "exp_unique_male.vcf"
+    output_file = "exp_unique_4_male.vcf"
 
-    print("Reading experimental vcf file...")
+    print("Reading experimental VCF file...")
     exp_headers, exp_data = read_vcf(exp_file)
     print(f"Experimental file contains {len(exp_data)} data rows.")
 
@@ -54,13 +57,13 @@ def main():
     _, ctrl_data = read_vcf(ctrl_file)
     print(f"Control file contains {len(ctrl_data)} data rows.")
 
-    print("Comparing the files to find unique rows in the experimental vcf file...")
+    print("Comparing the files to find unique rows in the experimental file...")
     unique_to_exp = compare_vcf(exp_data_unique, ctrl_data)
 
     if unique_to_exp:
-        print(f"Found {len(unique_to_exp)} unique rows in the experimental vcf file.")
+        print(f"Found {len(unique_to_exp)} unique rows in the experimental file.")
     else:
-        print("No unique rows were found in the experimental vcf file.")
+        print("No unique rows found in the experimental file.")
 
     print(f"Writing unique rows to {output_file}...")
     write_vcf(exp_headers, unique_to_exp, output_file)
