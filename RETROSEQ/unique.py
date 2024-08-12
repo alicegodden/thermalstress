@@ -1,6 +1,7 @@
 # Title: Removing non-unique rows from experimental retroseq vcf files
-# Subtitle: Based on first 4 columns only
+# Subtitle: Based on first 5 columns only
 # Author: Dr. Alice M. Godden
+
 
 import sys
 
@@ -13,8 +14,8 @@ def read_vcf(filename):
                 headers.append(line)
             else:
                 columns = line.strip().split('\t')
-                # Extract the first four columns: CHROM, POS, ID, REF
-                key = '\t'.join(columns[:4])
+                # Extract the first four columns: CHROM, POS, ID, REF, ALT
+                key = '\t'.join(columns[:5])
                 data.append(key)
         return headers, data
 
@@ -71,3 +72,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
