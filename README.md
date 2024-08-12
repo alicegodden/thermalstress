@@ -37,6 +37,8 @@ vcfinput_phenogram.py # Phenogram plot
 
 autobubble_goplot.py # Plotting go terms outputs (.csv from ShinyGO) with annotated p-values
 
+unique.py # filtering non-unique rows from experimental retroseq outputs to generate file of unique variants
+
 
 # FishTEA- Fish Transposable element analyzer scripts
 
