@@ -29,7 +29,7 @@ def filter_vcf(input_vcf, output_vcf):
             gq_value = float(format_values[gq_index])
             fl_value = int(format_values[fl_index])
 
-            if gq_value >= 1000 and fl_value >= 8:
+            if gq_value >= 100 and fl_value >= 8: #gq is reads supporting fl is confidence 1 being low 8 being highly confident
                 outfile.write(data_line)
 
     print(f"Filtered data has been written to {output_vcf}")
