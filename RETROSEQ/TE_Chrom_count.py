@@ -1,6 +1,6 @@
-Title: TE counts per chromosome
-Subtitle: Vcf file retroseq output as input
-Author: Dr. Alice M. Godden
+# Title: TE counts per chromosome
+# Subtitle: Vcf file retroseq output as input
+# Author: Dr. Alice M. Godden
 
 
 
