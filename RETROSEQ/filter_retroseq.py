@@ -1,6 +1,8 @@
 # Title- filter_retroseq.py
 # Author - Dr. Alice Godden
 # Import packages
+
+
 def filter_vcf(input_vcf, output_vcf):
     with open(input_vcf, 'r') as infile, open(output_vcf, 'w') as outfile:
         header_lines = []
@@ -29,13 +31,12 @@ def filter_vcf(input_vcf, output_vcf):
             gq_value = float(format_values[gq_index])
             fl_value = int(format_values[fl_index])
 
-            if gq_value >= 750 and fl_value >= 8: #gq is reads supporting fl is confidence 1 being low 8 being highly confident
+            if gq_value >= 1000 and fl_value >= 8: # gq is number of supporting reads, FL is confidence scored 1-8, lower = less confident higher = more confident call
                 outfile.write(data_line)
 
     print(f"Filtered data has been written to {output_vcf}")
-
 # Replace these with your actual input and output filenames
-input_vcf = 'FILTERmerged_with_header_USEME_win150_int_filteredHEADER.vcf'
-output_vcf = 'HEADERFILTERPY_merged_with_header_USEME_win150_int_filtered.vcf'
+input_vcf = 'Outer_minusNon_nmdups_win100_chrom.vcf'
+output_vcf = 'Outer_minusNon_nmdups_win100_chrom_gq1000_fl8.vcf'
 
 filter_vcf(input_vcf, output_vcf)
