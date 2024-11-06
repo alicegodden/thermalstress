@@ -133,7 +133,7 @@ for chromosome, positions in exp_chrom_pos_dict.items():
         p_value = perform_hypergeometric_test(count_input_genes, len(positions), count_all_genes, total_population)
 
         # If the region is statistically significant (p-value < 0.05), add it to the enriched regions list
-        if p_value < 0.01:
+        if p_value < 0.05:
             enriched_regions.append((chromosome, start, end, p_value))
 
 # Plotting TE insertion points for experimental data with colors
@@ -143,9 +143,9 @@ for chromosome, positions in exp_chrom_pos_dict.items():
     ax.scatter([int(chromosome)] * len(positions), positions, color=colors, alpha=0.5)
 
 # Highlight significant enriched regions next to the chromosome
-for chrom, start, end, p_value in enriched_regions:
-    ax.bar(int(chrom) - 0.2, end - start, bottom=start, color='grey', alpha=1, width=0.4,
-           label='Enriched Region' if chrom == enriched_regions[0][0] and start == enriched_regions[0][1] else "")
+for chrom, chromStart, chromEnd, p_value in enriched_regions:
+    ax.hlines(y=[chromStart, chromEnd], xmin=int(chrom) - 0.25, xmax=int(chrom) - 0.15, color='indigo', linewidth=0.2,
+              label='Enriched Region')
 
 # Add ellipses for each half of the chromosome with space below
 for i, (chrom, end) in enumerate(end_data):
@@ -210,7 +210,7 @@ ax.set_ylim(y_min)  # Set the y-axis limits
 # Customizing plot details
 plt.xlabel('Chromosome', fontsize=18, fontweight='bold')
 plt.ylabel('Position', fontsize=18, fontweight='bold')
-plt.title('Non-reference TE Insertion mutations with Enriched Regions', fontsize=20, fontweight='bold')
+plt.title('Non-reference TE Insertion mutations Ovaries Temperature', fontsize=20, fontweight='bold')
 plt.xticks(range(1, 26), [chrom for chrom, _ in end_data], fontsize=18, fontweight='bold')
 plt.yticks(fontsize=18, fontweight='bold')
 
@@ -219,14 +219,14 @@ legend_elements = [
     Line2D([0], [0], marker='o', color='w', markerfacecolor=color, markersize=10, alpha=0.5, label=te_type)
     for te_type, color in te_colors.items() if te_type != 'Unknown'
 ] + [
-    Line2D([0], [0], color='grey', lw=2, label='Enriched Regions'),
+    Line2D([0], [0], color='indigo', lw=2, label='Enriched Regions'),
     Line2D([0], [0], color='darkred', lw=2, label='Open Chromatin'),
     Line2D([0], [0], marker='D', color='w', markerfacecolor='grey', markersize=8, label='Centromere')
 ]
 plt.legend(handles=legend_elements, fontsize=12, loc='upper right')
 
 # Save and display the plot
-output_file = 'test.png'  # Replace with your desired filename and extension
+output_file = 'retroseq_enriched_poster_HS_ovaries.png'  # Replace with your desired filename and extension
 plt.savefig(output_file, dpi=600)
 
 plt.show()
