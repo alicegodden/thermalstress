@@ -79,6 +79,12 @@ GENOME COVERAGE analysis
 
 average.py , coverage.py, violinplot.py and boxplot.py # For summarising the average depth from samtools and making plots to analyse this by chromosome at whole genome level
 
+# miRanda analysis
+binomial.py
+binomialplot.py
+
+Full miRanda analysis as described previously [here](https://github.com/alicegodden/paternalsocstress/tree/main/miRanda)
+
 # Polar bear analysis
 
 bearphenogram.py # Plotting a basic phenogram of a list of significantly differentially expressed TEs from Telescope outputs, genome ASM1731132v1
