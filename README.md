@@ -80,8 +80,9 @@ GENOME COVERAGE analysis
 average.py , coverage.py, violinplot.py and boxplot.py # For summarising the average depth from samtools and making plots to analyse this by chromosome at whole genome level
 
 # miRanda analysis
-binomial.py
-binomialplot.py
+binomial.py # calculate enrichment of genes targeted by our significantly differentially expressed genes and miRNAs
+
+binomialplot.py # plotting bar charts observed v expected and binomial results
 
 Full miRanda analysis as described previously [here](https://github.com/alicegodden/paternalsocstress/tree/main/miRanda)
 
