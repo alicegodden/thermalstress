@@ -10,8 +10,8 @@ library(readr)
 library(viridis)
 
 # Load the control and treatment divsum files
-control <- read_delim("MC_all.divsum.csv", delim = " ", col_types = cols())
-treatment <- read_delim("MT_all.divsum.csv", delim = " ", col_types = cols())
+control <- read_delim("FC_all.divsum.csv", delim = " ", col_types = cols())
+treatment <- read_delim("FT_all.divsum.csv", delim = " ", col_types = cols())
 
 # Add group labels
 control <- control %>% mutate(Group = "Control")
@@ -85,7 +85,7 @@ ggplot(family_data, aes(x = Family, y = Total_Count, fill = Group)) +
   geom_bar(stat = "identity", position = "dodge", color = "black", fontface = "bold") +
   geom_text(data = stat_results, aes(x = Family, y = max(family_data$Total_Count) * 1.1, label = significance), inherit.aes = FALSE) +
   labs(
-    title = "Testes Repeat Landscape",
+    title = "Ovaries Repeat Landscape",
     x = "Family",
     y = "Total Counts",
     fill = "Group"
@@ -96,12 +96,12 @@ ggplot(family_data, aes(x = Family, y = Total_Count, fill = Group)) +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1, face="bold")) +
   theme(
-    plot.title = element_text(face = "bold"),  # Title
-    axis.title = element_text(face = "bold", color ="black"),  # Axis titles
-    axis.text = element_text(face = "bold", color = "black"),   # Axis text
-    legend.title = element_text(face = "bold", color = "black"),  # Legend title
-    legend.text = element_text(face = "bold", color = "black")   # Legend text
+    plot.title = element_text(face = "bold", size=22),  # Title
+    axis.title = element_text(face = "bold", color ="black", size = 20),  # Axis titles
+    axis.text = element_text(face = "bold", color = "black", size=20),   # Axis text
+    legend.title = element_text(face = "bold", color = "black", size =21),  # Legend title
+    legend.text = element_text(face = "bold", color = "black", size=20)   # Legend text
   )
 
 # Save the plot
-ggsave("TESTES_te_family_bar_chart_with_temperature.png", width = 10, height = 6)
+ggsave("OVARIES_te_family_bar_chart_with_temperature.png", width = 10, height = 6)
