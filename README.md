@@ -74,6 +74,8 @@ chrom_rename.py # For renaming chromosomes to numeric IDs to match Ensembl forma
 
 TE_Chrom_count.py # Counting and plotting number of non-reference TE insertions mutations per chromosome
 
+features_stats_barchart.py # Fisher's exact testing on overlapping genomic features of TE non-reference insertion mutations
+
 
 GENOME COVERAGE analysis
 
