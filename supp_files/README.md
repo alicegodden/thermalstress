@@ -1,4 +1,4 @@
-# Supplementary files for manuscript:
+# Supplementary files 
 # The molecular response to heat stress in male and female zebrafish gonads from genome to transcriptome and back
 
 1 – Water testing aquariums under 28oC and 34oC for 2 weeks of treatment  – water_testing.xlsx
