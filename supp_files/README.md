@@ -1,6 +1,5 @@
 Supplementary files for manuscript:
-The molecular response to heat stress in male and female zebrafish gonads from genome to transcriptome and back![image](https://github.com/user-attachments/assets/2f3a6376-c6f1-457f-91d5-b75964fb6855)
-
+The molecular response to heat stress in male and female zebrafish gonads from genome to transcriptome and back
 
 1 – Water testing aquariums under 28oC and 34oC for 2 weeks of treatment  – water_testing.xlsx
 
@@ -21,7 +20,8 @@ The molecular response to heat stress in male and female zebrafish gonads from g
 
 12- Analysis of differential piRNA expression- Testes: 12-12-male_tesmall_pirna_volcano.csv
 13-Analysis of differential piRNA expression - Ovaries: 13-female_tesmall_pirna_volcano.tsv
+
 14- DESeq2 analysis of differential structural RNA expression- Testes: 14-male_structRNA_tesmall_deseq2.csv
 15- DESeq2 analysis of differential structural RNA expression - Ovaries: 15-female_structRNA_tesmall_deseq2.csv
 
-![image](https://github.com/user-attachments/assets/109059ab-a779-4e93-9980-13ce81724858)
+
