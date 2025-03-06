@@ -18,7 +18,7 @@
 10- Analysis of differential TE (Telescope) expression - Testes: 10- telescope_male_raw.csv.zip
 11-Analysis of differential TE (Telescope) expression- Ovaries: 11-telescope_female_raw.csv.zip
 
-12- Analysis of differential piRNA expression- Testes: 12-12-male_tesmall_pirna_volcano.csv
+12- Analysis of differential piRNA expression- Testes: 12-male_tesmall_pirna_volcano.csv
 13-Analysis of differential piRNA expression - Ovaries: 13-female_tesmall_pirna_volcano.tsv
 
 14- DESeq2 analysis of differential structural RNA expression- Testes: 14-male_structRNA_tesmall_deseq2.csv
