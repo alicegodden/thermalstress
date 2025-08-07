@@ -76,6 +76,8 @@ TE_Chrom_count.py # Counting and plotting number of non-reference TE insertions 
 
 features_stats_barchart.py # Fisher's exact testing on overlapping genomic features of TE non-reference insertion mutations
 
+features_heatmap_2_rows.py # Heatmap with Fishers and Odds ratio resting for enrichment of features that TE insertion mutations overlap
+
 
 GENOME COVERAGE analysis
 
