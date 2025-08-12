@@ -38,6 +38,7 @@ A collection of analysis scripts for water quality, genomics, TE insertion studi
 | `autobubble_goplot.py` | GO terms plotting (.csv from ShinyGO) with annotated p-values |
 | `unique.py` | Filtering non-unique rows from Retroseq outputs to create unique variants file |
 
+
 #### 🧪 Retroseq Analysis  
 | Script | Description |
 |--------|-------------|
@@ -53,6 +54,8 @@ A collection of analysis scripts for water quality, genomics, TE insertion studi
 | `TE_Chrom_count.py` | Count & plot TE insertions per chromosome |
 | `features_stats_barchart.py` | Fisher’s exact test on genomic feature overlaps |
 | `features_heatmap_2_rows.py` | Heatmap with Fisher’s & Odds ratio testing |
+| `retroseq_loci_heatmap.py` | Heatmap of TE insertion loci with enrichment analysis |
+
 
 ---
 
