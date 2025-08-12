@@ -1,22 +1,25 @@
-# Contents
-
-# Bash scripts
-TBC
-
 
 # Environmental stress scripts
 Thermal stress Zebrafish genomics project
 
+# Contents
+
+# Water analysis
 water_testing.py # water testing parameters and graphs
 
-# Social stress in Zebrafish transcriptome and sperm sRNAs - R notebook
-Godden_seq.Rmd
 
+# /Rscripts
+AG_RNAseq.Rmd # R notebook for DESeq2 analyses
 
-# Thermal stress in Zebrafish gonads - R notebook for RNA-seq and sRNA analyses
-AG_RNAseq.Rmd
+manhattan_99.R # Manhattan plots with 99th percentile plotting
 
-telescopeCounts.R - Telescope output readin to make universal counts file across multiple samples
+pheatmap_logcpm_z_heatstress.R # Normalised counts and heatmaps from DESeq2 outputs
+
+tajD_fst_genes.R # Tajima's D and FST plots tracks with genes at chromosomal level
+
+telescopeCounts.R # Custome scripts for analysis and assimilation of count data from Telescope pipeline
+
+testing_glm_HS_retroseq.R # GLM of Retroseq data at family level
 
 
 # Thermal stress in Zebrafish gonads - R notebook- for DNA-seq analyses of variants
