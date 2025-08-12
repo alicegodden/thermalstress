@@ -22,10 +22,6 @@ telescopeCounts.R # Custome scripts for analysis and assimilation of count data 
 testing_glm_HS_retroseq.R # GLM of Retroseq data at family level
 
 
-# Thermal stress in Zebrafish gonads - R notebook- for DNA-seq analyses of variants
-Haploid analyses.Rmd
-
-
 # Python scripts 
 
 # SNPEFF analysis
@@ -43,19 +39,8 @@ autobubble_goplot.py # Plotting go terms outputs (.csv from ShinyGO) with annota
 unique.py # filtering non-unique rows from experimental retroseq outputs to generate file of unique variants
 
 
-# FishTEA- Fish Transposable element analyzer scripts
 
-FISHTEA_annotate_family.py # Annotating the significantly differentially expressed TE families from TEtranscripts pipeline with chromosome and genomic co-ordinates
-
-FISHTEA_matching.py # Matching the TEs with genes that are overlapping in location
-
-FISHTEA_Phenogram_25.py # Plotting overlapping significantly DE genes and TEs on Zebrafish genome
-
-FISHTEA_chromatin_phenogram.py # plotting open/accessible regions of the genome 
-
-
-
-# RETROSEQ analysis
+# RETROSEQ analysis scripts
 
 filter_retroseq.py # filtering on GQ and FL Retroseq outputs to filter vcf for most confident novel TE insertion calls
 
@@ -82,7 +67,7 @@ features_stats_barchart.py # Fisher's exact testing on overlapping genomic featu
 features_heatmap_2_rows.py # Heatmap with Fishers and Odds ratio resting for enrichment of features that TE insertion mutations overlap
 
 
-GENOME COVERAGE analysis
+# Genome coverage analysis
 
 average.py , coverage.py, violinplot.py and boxplot.py # For summarising the average depth from samtools and making plots to analyse this by chromosome at whole genome level
 
