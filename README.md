@@ -55,6 +55,8 @@ A collection of analysis scripts for water quality, genomics, TE insertion studi
 | `features_stats_barchart.py` | Fisher’s exact test on genomic feature overlaps |
 | `features_heatmap_2_rows.py` | Heatmap with Fisher’s & Odds ratio testing |
 | `retroseq_loci_heatmap.py` | Heatmap of TE insertion loci with enrichment analysis |
+| `retroseq_ensembl_vep.py` | Ensembl VEP analysis of Retroseq outputs- heatmap and bar chart |
+
 
 
 ---
