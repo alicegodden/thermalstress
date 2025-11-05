@@ -1,0 +1,31 @@
+# Title: Sample metadata RNA-seq
+# Author: Dr. Alice M. Godden
+
+Sample	Raw sequence file name 	Raw Forward Sequence read	Raw Reverse Sequence read 
+OC1	12FC	12_F_C_S12_R1_001.fastq.gz	12_F_C_S12_R2_001.fastq.gz
+OC2	5FC	5_F_C_S1_R1_001.fastq.gz	5_F_C_S1_R2_001.fastq.gz
+OC3	25FC	25_F_C_S2_R1_001.fastq.gz	25_F_C_S2_R2_001.fastq.gz
+OC4	1FC	1_F_C_S5_R1_001.fastq.gz	1_F_C_S5_R2_001.fastq.gz
+OC5	16FC	16_F_C_S9_R1_001.fastq.gz	16_F_C_S9_R2_001.fastq.gz
+OC6	9FC	9_F_C_S11_R1_001.fastq.gz	9_F_C_S11_R2_001.fastq.gz
+OT1	22FT	22_F_T_S3_R1_001.fastq.gz	22_F_T_S3_R2_001.fastq.gz
+OT2	2FT	2_F_T_S4_R1_001.fastq.gz	2_F_T_S4_R2_001.fastq.gz
+OT3	10FT	10_F_T_S7_R1_001.fastq.gz	10_F_T_S7_R2_001.fastq.gz
+OT4	15FT	15_F_T_S8_R1_001.fastq.gz	15_F_T_S8_R2_001.fastq.gz
+OT5	11FT	11_F_T_S10_R1_001.fastq.gz	11_F_T_S10_R2_001.fastq.gz
+OT6	6FT	6_F_T_S6_R1_001.fastq.gz	6_F_T_S6_R2_001.fastq.gz
+TC1	30MC	30_M_C_S22_R1_001.fastq.gz	30_M_C_S22_R2_001.fastq.gz
+TC2	18MC	18_M_C_S16_R1_001.fastq.gz	18_M_C_S16_R2_001.fastq.gz
+TC3	3MC	3_M_C_S14_R1_001.fastq.gz	3_M_C_S14_R2_001.fastq.gz
+TC4	7MC	7_M_C_S15_R1_001.fastq.gz	7_M_C_S15_R2_001.fastq.gz
+TC5	23MC	23_M_T_S18_R1_001.fastq.gz	23_M_T_S18_R2_001.fastq.gz
+TC5	23MC	23_M_C_S1_R1_001_tomerge_.fastq.gz	23_M_C_S1_R2_001_tomerge_.fastq.gz
+TC6	34MC	34_M_C_S23_R1_001.fastq.gz	34_M_C_S23_R2_001.fastq.gz
+TT1	4MT	4_M_T_S17_R1_001.fastq.gz	4_M_T_S17_R2_001.fastq.gz
+TT2	24MT	24_M_T_S19_R1_001.fastq.gz	24_M_T_S19_R2_001.fastq.gz
+TT2	24MT	24_M_T_S2_R1_001_tomerge.fastq.gz	24_M_T_S2_R2_001_tomerge.fastq.gz
+TT3	28MT	28_M_T_S20_R1_001.fastq.gz	28_M_T_S20_R2_001.fastq.gz
+TT4	29MT	29_M_T_S21_R1_001.fastq.gz	29_M_T_S21_R2_001.fastq.gz
+TT5	41MT	41_M_T_S24_R1_001.fastq.gz	41_M_T_S24_R2_001.fastq.gz
+TT5	41MT	41_M_T_S3_R1_001_tomerge.fastq.gz	41_M_T_S3_R2_001_tomerge.fastq.gz
+TT6	8MT	8_M_T_S13_R1_001.fastq.gz	8_M_T_S13_R2_001.fastq.gz
