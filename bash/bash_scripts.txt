@@ -1,0 +1,224 @@
+# Title : Bash & R  scripts used to execute RNA-seq and sRNA-seq pipelines from nf-core
+# Author: Dr. Alice M. Godden
+
+Appendix 1-RNA-seq submission script nfcore
+NF-CORE pipeline used for RNA-seq
+
+#!/bin/sh
+#SBATCH --job-name=ALLRNAseq
+#SBATCH -o /gpfs/home/nfv16zpu/RNAseq/Alice_Godden_SOUK009450_rRNA/RNAseqALL.log
+#SBATCH -e /gpfs/home/nfv16zpu/RNAseq/Alice_Godden_SOUK009450_rRNA/RNAseqALL.log
+#SBATCH -p hmem-754                #Which queue to use
+#SBATCH --qos=hmem                # access to the queue
+#SBATCH --mem=500G               # memory required
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=24             #Memory
+#SBATCH --time=7-00:00            # time (DD-HH:MM)
+#SBATCH --mail-user=nfv16zpu@uea.ac.uk
+#SBATCH --mail-type=BEGIN
+#SBATCH --mail-type=END
+module add nextflow/22.04.5
+module add singularity
+module add python/3.8
+module add samtools/1.11
+export PATH=$PATH:/gpfs/home/nfv16zpu/scratch/STAR-2.7.10a/bin/Linux_x86_64_static
+nextflow run nf-core/rnaseq --input /gpfs/home/nfv16zpu/RNAseq/Alice_Godden_SOUK009450_rRNA/ss_male_female/samplesheet.csv --outdir /gpfs/home/nfv16zpu/scratch/rnaseq_11_MALE_3 -c /gpfs/home/nfv16zpu/RNAseq/Alice_Godden_SOUK009450_rRNA/custom_male.conf -profile singularity --fasta /gpfs/home/nfv16zpu/RNAseq/Alice_Godden_SOUK009450_rRNA/genomefiles/Danio_rerio.GRCz11.dna.primary_assembly.fa.gz --gtf /gpfs/home/nfv16zpu/RNAseq/Alice_Godden_SOUK009450_rRNA/genomefiles/Danio_rerio.GRCz11.107.gtf.gz
+
+Appendix 2- config file
+
+// Set these five params at a minimum
+params.input = '/gpfs/home/nfv16zpu/RNAseq/Alice_Godden_SOUK009450_rRNA/ss_ov3/samplesheet.csv'
+params.fasta = '/gpfs/home/nfv16zpu/RNAseq/Alice_Godden_SOUK009450_rRNA/genomefiles/Danio_rerio.GRCz11.dna.primary_assembly.fa.gz'
+params.gtf = '/gpfs/home/nfv16zpu/RNAseq/Alice_Godden_SOUK009450_rRNA/genomefiles/Danio_rerio.GRCz11.107.gtf.gz'
+out_root = '/gpfs/home/nfv16zpu/RNAseq/Alice_Godden_SOUK009450_rRNA/ov1'
+params.email = 'nfv16zpu@uea.ac.uk'
+
+// Only make changes below if required
+params.outdir = out_root + '/results'
+workDir = out_root + '/nextflow_work'
+
+process {
+    executor = 'local'
+    clusterOptions = '--export=NONE'
+    cpus = { 20 * task.attempt }
+    memory = { 140.GB * task.attempt }
+    time = { 10.h * task.attempt }
+    withName: RNASEQ:PREPARE_GENOME:STAR_GENOMEGENERATE { time = '1440 min'; memory = '85.GB'; cpus = '20'}
+    withName: RNASEQ:ALIGN_STAR:STAR_ALIGN { time = '1440 min'; memory = '250.GB'; cpus = '20'}
+    withName: RNASEQ:QUALIMAP_RNASEQ { time = '1440 min'; memory = '150.GB'; cpus = '20'}
+    withName: RNASEQ:RNASEQ:INPUT_CHECK:SAMPLESHEET_CHECK { time = '1440 min'; memory = '150.GB'; cpus = '20'}
+    errorStrategy = 'retry'
+    maxRetries = 3
+}
+
+
+Appendix 3 – smRNA seq submission script
+#!/bin/sh
+#SBATCH --job-name=FM_75_PE_mirna
+#SBATCH -o /gpfs/home/nfv16zpu/mirna/Alice_Godden_SOUK009450_miRNA/miRNAseq-%j.out
+#SBATCH -e /gpfs/home/nfv16zpu/mirna/Alice_Godden_SOUK009450_miRNA/miRNAseq-%j.err
+#SBATCH -p hmem-754                #Which queue to use
+#SBATCH --qos=hmem                # access to the queue
+#SBATCH --mem=400G               # memory required
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=20             #Memory
+#SBATCH --time=7-00:00            # time (DD-HH:MM)
+#SBATCH --mail-user=nfv16zpu@uea.ac.uk
+#SBATCH --mail-type=BEGIN
+#SBATCH --mail-type=END
+module add nextflow/22.04.5
+module add singularity
+module add python/3.8
+module add samtools/1.11
+export PATH=$PATH:/gpfs/home/nfv16zpu/samtools-1.10/bin/Linux_x86_64_static
+nextflow run nf-core/smrnaseq --input /gpfs/home/nfv16zpu/mirna/Alice_Godden_SOUK009450_miRNA/ss_all/samplesheet.csv -profile singularity -r 2.0.0 --protocol qiaseq --three_prime_adapter AACTGTAGGCACCATCAAT --trim_galore_max_length 40 --min_length 17 --mirtrace_protocol qiaseq --fasta /gpfs/home/nfv16zpu/RNAseq/Alice_Godden_SOUK009450_rRNA/genomefiles/Danio_rerio.grcz11.primary.assembly.fa --outdir /gpfs/scratch/nfv16zpu/miRNAseq_all_PEmerge_40 --mirna_gtf /gpfs/home/nfv16zpu/mirna/dre.gff3 --mirtrace_species dre --mature /gpfs/home/nfv16zpu/mirna/mature.fa --hairpin /gpfs/home/nfv16zpu/mirna/hairpin.fa.gz --max_cpus 20 --max_memory 400.GB -c /gpfs/home/nfv16zpu/mirna/Alice_Godden_SOUK009450_miRNA/mirna.conf
+
+Appendix 4- config file for smRNAseq
+
+// Process-specific resource requirements
+  withLabel:process_low {
+    cpus   = { check_max( 6     * task.attempt, 'cpus'    ) }
+    memory = { check_max( 50.GB * task.attempt, 'memory'  ) }
+    time   = { check_max( 4.h   * task.attempt, 'time'    ) }
+  }
+  withLabel:process_medium {
+    cpus   = { check_max( 12     * task.attempt, 'cpus'    ) }
+    memory = { check_max( 100.GB * task.attempt, 'memory'  ) }
+    time   = { check_max( 12.h   * task.attempt, 'time'    ) }
+  }
+  withLabel:process_high_memory {
+    cpus   = { check_max( 20    * task.attempt, 'cpus'    ) }
+    memory = { check_max( 200.GB * task.attempt, 'memory'  ) }
+    time   = { check_max( 16.h  * task.attempt, 'time'    ) }
+  }
+  withLabel:process_high {
+    cpus   = { check_max( 20    * task.attempt, 'cpus'    ) }
+    memory = { check_max( 200.GB * task.attempt, 'memory'  ) }
+    time   = { check_max( 16.h  * task.attempt, 'time'    ) }
+  }
+  withLabel:process_long {
+    time   = { check_max( 20.h  * task.attempt, 'time'    ) }
+  }
+process {
+      withName:NFCORE_SMRNASEQ:SMRNASEQ:MIRNA_QUANT:PARSE_MATURE {
+          cpus = 20
+          memory = 200.GB
+          time = 16.h
+    }
+}
+
+Appendix 5 – Removing PCR duplicates with umi tagging
+
+#!/bin/sh
+#SBATCH --job-name=umitest
+#SBATCH -o /gpfs/home/nfv16zpu/mirna/Alice_Godden_SOUK009450_miRNA/female/umi-%A-%a.out #Standard output log
+#SBATCH -e /gpfs/home/nfv16zpu/mirna/Alice_Godden_SOUK009450_miRNA/female/umi-%A-%a.out.err #Standard error log
+#SBATCH -p compute-64-512                #Which queue to use
+#SBATCH --qos=hmem                # access to the queue
+#SBATCH --mem=400G               # memory required
+#SBATCH --time=7-00:00            # time (DD-HH:MM)
+#SBATCH --mail-user=nfv16zpu@uea.ac.uk
+#SBATCH --mail-type=BEGIN
+#SBATCH --mail-type=END
+module load UMI-tools/1.1.2
+umi_tools extract --extract-method=regex --bc-pattern=".+(?P<discard_1>AACTGTAGGCACCATCAAT){s<=2}(?P<umi_1>.{12})(?P<discard_2>.{0,70})" --stdin 10_F_T_s_S7_R1_001.fastq.gz --stdout name.processed.fastq.gz
+
+#This removes the common sequence too.
+#Then nf core smrna seq pipe
+
+# Then used deduplicated bam files in samtools to get raw count files.
+umi_tools dedup -I example.bam --output-stats=deduplicated -S deduplicated.bam
+then samtools idxstats to generate counts files. 
+# very few PCR duplicate reads existed so very few reads were removed. 
+
+
+Appendix 9- Conda environment for running Retroseq-
+# packages in environment at retroseq:
+#
+# Name                    Version                   Build  Channel
+_libgcc_mutex             0.1                 conda_forge    conda-forge
+_openmp_mutex             4.5                       2_gnu    conda-forge
+backports-functools-lru-cache 1.6.6                    pypi_0    pypi
+ca-certificates           2023.7.22            hbcca054_0    conda-forge
+certifi                   2019.11.28       py27h8c360ce_1    conda-forge
+cycler                    0.10.0                   pypi_0    pypi
+kiwisolver                1.1.0                    pypi_0    pypi
+ld_impl_linux-64          2.40                 h41732ed_0    conda-forge
+libffi                    3.2.1             he1b5a44_1007    conda-forge
+libgcc-ng                 13.1.0               he5830b7_0    conda-forge
+libgomp                   13.1.0               he5830b7_0    conda-forge
+libsqlite                 3.42.0               h2797004_0    conda-forge
+libstdcxx-ng              13.1.0               hfd8a6a1_0    conda-forge
+libzlib                   1.2.13               hd590300_5    conda-forge
+matplotlib                2.2.5                    pypi_0    pypi
+ncurses                   6.4                  hcb278e6_0    conda-forge
+numpy                     1.16.6                   pypi_0    pypi
+openssl                   1.1.1u               hd590300_0    conda-forge
+pip                       20.1.1             pyh9f0ad1d_0    conda-forge
+pyparsing                 2.4.7                    pypi_0    pypi
+pysam                     0.20.0                   pypi_0    pypi
+python                    2.7.15          h5a48372_1011_cpython    conda-forge
+python-dateutil           2.8.2                    pypi_0    pypi
+python_abi                2.7                    1_cp27mu    conda-forge
+pytz                      2023.3                   pypi_0    pypi
+readline                  8.2                  h8228510_1    conda-forge
+samtools                  0.1.19              h50ea8bc_11    bioconda
+setuptools                44.0.0                   py27_0    conda-forge
+six                       1.16.0                   pypi_0    pypi
+sqlite                    3.42.0               h2c6b66d_0    conda-forge
+subprocess32              3.5.4                    pypi_0    pypi
+tk                        8.6.12               h27826a3_0    conda-forge
+wheel                     0.37.1             pyhd8ed1ab_0    conda-forge
+zlib                      1.2.13               hd590300_5    conda-forge
+
+
+
+
+ 
+Appendix 6- Reading in raw counts from TEsmall and Telescope and getting a matrix for use in DESeq2 analyses
+
+setwd("~/Desktop/piRNAs & TEs/TEsmall/female_to_merge")
+library(tidyverse)
+library(purrr)
+library(tidyverse)
+library(dplyr)
+f_files<- list.files("/Desktop/IMMLER_PAPERS/silva et al/procB/TEsmall/csv/extra16_csv", pattern = "*.csv", full.names = T)
+
+# function to read in a tsv and add the file name as a column
+customized_read_csv <- function(file){
+  read_csv(file) %>%
+    mutate(fileName = file)
+}
+
+merged <-list.files(full.names = TRUE) %>%  # list all the files
+  lapply(customized_read_csv) %>% # read them all in with our custom function
+  reduce(bind_rows) %>% # stack them all on top of each other
+  select(fid, fileName, count) %>% # select the correct columns
+  pivot_wider(names_from = fileName, values_from = count) # and switch from "long format" to "wide format"
+
+#write.csv(merged, file = "merged_male_telescope_rawcounts.csv")
+write.csv(merged, file="TEsmall_40_merged_rawcounts.csv")
+head(merged)
+
+#change NAs to zero
+library(dplyr)
+
+merged[is.na(merged)] <- 0
+head(merged)
+
+#Example 1 - Rename second column etc to new name in “”
+colnames(merged)[2] ="OT3"
+colnames(merged)[3] ="OT5"
+colnames(merged)[4] ="OC1"
+colnames(merged)[5] ="OT4"
+colnames(merged)[6] ="OC5"
+colnames(merged)[7] ="OC4"
+colnames(merged)[8] ="OT1"
+colnames(merged)[9] ="OC3"
+colnames(merged)[10] ="OT2"
+colnames(merged)[11] ="OC2"
+colnames(merged)[12] ="OT6"
+colnames(merged)[13] ="OC6"
+
+#write output csv file
+write.csv(merged, file="TEsmall_40_naremoved_merged_rawcounts.csv")
