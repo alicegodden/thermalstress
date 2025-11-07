@@ -1,4 +1,4 @@
-🧬 Thermal variation remodels sex-specific small RNA regulation and transposon activity in the germline<img width="468" height="56" alt="image" src="https://github.com/user-attachments/assets/f6e01fde-a690-4730-9f79-4f1d08dc21bf" />
+🧬 Thermal variation remodels sex-specific small RNA regulation and transposon activity in the germline
 
 
 📄 Publication Data Repository
