@@ -33,6 +33,7 @@ A collection of analysis scripts for water quality, genomics, TE insertion studi
 | `tajD_fst_genes.R` | Tajima's D and FST plots with gene tracks at chromosomal level |
 | `telescopeCounts.R` | Custom scripts for analysis & assimilation of count data from Telescope pipeline |
 | `testing_glm_HS_retroseq.R` | GLM of Retroseq data at family level |
+| `zfish_embryo_models.R` | GLM of embryo and mortality data |
 
 ---
 
