@@ -22,6 +22,13 @@ A collection of analysis scripts for water quality, genomics, TE insertion studi
 |--------|-------------|
 | `water_testing.py` | Water testing parameters and graph generation |
 
+------
+
+### piRNA ping-pong Analysis  
+| Script | Description |
+|--------|-------------|
+| `ping_pong.py` | Searching for ping-pong signatures |
+
 ---
 
 ### 📊 R Scripts (`/Rscripts`)  
