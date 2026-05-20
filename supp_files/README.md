@@ -50,3 +50,8 @@ This section details the differential expression of regulatory small RNAs. Files
 | **13** | `13-female_tesmall_pirna_volcano.tsv` | **piRNA** | ♀️ Ovaries |
 | **14** | `14-male_structRNA_tesmall_deseq2.csv` | **Structural RNA** | ♂️ Testes |
 | **15** | `15-female_structRNA_tesmall_deseq2.csv` | **Structural RNA** | ♀️ Ovaries |
+
+
+### Cytoscape multiomic analyses
+| **16** | `16-thermal_testes.zip`  | ♂️ Testes |
+| **17** | `17-heatstress_ovaries.zip` |♀️ Ovaries |
