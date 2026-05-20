@@ -51,6 +51,7 @@ This section details the differential expression of regulatory small RNAs. Files
 | **14** | `14-male_structRNA_tesmall_deseq2.csv` | **Structural RNA** | ♂️ Testes |
 | **15** | `15-female_structRNA_tesmall_deseq2.csv` | **Structural RNA** | ♀️ Ovaries |
 
+---
 
 ### 🌐 Cytoscape Multi-Omic Analyses
 
@@ -61,7 +62,6 @@ This section contains pre-built multi-omic regulatory networks integrating miRNA
 | **16** | `16-thermal_testes.zip` | Thermal Stress | ♂️ Testes |
 | **17** | `17-heatstress_ovaries.zip` | Heat Stress | ♀️ Ovaries |
 
----
 
 ### 🧭 Usage
 
@@ -80,7 +80,7 @@ This will launch an **interactive network viewer**, allowing exploration of:
 - TE–gene regulatory associations  
 - Multi-layer regulatory connectivity  
 
----
+
 
 ### 📌 Notes
 
