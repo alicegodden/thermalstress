@@ -3,8 +3,7 @@
 ## 📄 Publication Data Repository
 
 This repository contains the supplementary and raw output files for the paper:
-**"Sex-specific genome defence and transposon activity under thermal stress in zebrafish germ cells"<img width="468" height="69" alt="image" src="https://github.com/user-attachments/assets/458da384-eb19-448d-b9ac-69180de59140" />
-![Uploading image.png…]()
+**"Sex-specific genome defence and transposon activity under thermal stress in zebrafish germ cells"
 ."**
 
 ---
