@@ -98,9 +98,4 @@ A collection of analysis scripts for water quality, genomics, TE insertion studi
 
 ---
 
-## 📌 Notes  
-- Scripts are organised by analysis type for clarity  
-- Designed for reproducible zebrafish genomics workflows  
-- Some scripts are standalone, others work in pipelines  
 
----
