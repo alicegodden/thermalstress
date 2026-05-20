@@ -53,5 +53,6 @@ This section details the differential expression of regulatory small RNAs. Files
 
 
 ### Cytoscape multiomic analyses
+| :---: | :--- | :--- | :---: |
 | **16** | `16-thermal_testes.zip`  | ♂️ Testes |
 | **17** | `17-heatstress_ovaries.zip` |♀️ Ovaries |
