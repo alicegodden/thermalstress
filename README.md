@@ -42,6 +42,7 @@ A collection of analysis scripts for water quality, genomics, TE insertion studi
 | `testing_glm_HS_retroseq.R` | GLM of Retroseq data at family level |
 | `zfish_embryo_models.R` | GLM of embryo and mortality data |
 | `regulon.R` | Transcription factor and regulon analyses |
+| `multiomics_cytoscape.R` | Network analysis of all genomic datasets combined in Cytoscape |
 
 ---
 
