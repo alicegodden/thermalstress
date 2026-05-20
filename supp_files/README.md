@@ -52,7 +52,38 @@ This section details the differential expression of regulatory small RNAs. Files
 | **15** | `15-female_structRNA_tesmall_deseq2.csv` | **Structural RNA** | ♀️ Ovaries |
 
 
-### Cytoscape multiomic analyses
+### 🌐 Cytoscape Multi-Omic Analyses
+
+This section contains pre-built multi-omic regulatory networks integrating miRNA, piRNA, transposable elements (TEs), and gene expression data. Each archive contains an interactive Cytoscape.js visualisation.
+
+| ID | Filepath | Condition | Sex |
 | :---: | :--- | :--- | :---: |
-| **16** | `16-thermal_testes.zip`  | ♂️ Testes |
-| **17** | `17-heatstress_ovaries.zip` |♀️ Ovaries |
+| **16** | `16-thermal_testes.zip` | Thermal Stress | ♂️ Testes |
+| **17** | `17-heatstress_ovaries.zip` | Heat Stress | ♀️ Ovaries |
+
+---
+
+### 🧭 Usage
+
+Each `.zip` file should be extracted. Inside, you will find a folder containing an `index.html` file.
+
+To view the network:
+
+1. Unzip the archive  
+2. Open the extracted folder  
+3. Open `index.html` in a web browser  
+
+This will launch an **interactive network viewer**, allowing exploration of:
+
+- miRNA–gene interactions  
+- piRNA–TE targeting  
+- TE–gene regulatory associations  
+- Multi-layer regulatory connectivity  
+
+---
+
+### 📌 Notes
+
+- These are **Cytoscape.js exports**, not single standalone files  
+- Keep all extracted files together (do not move `index.html` independently)  
+- Best viewed in modern browsers (Chrome, Firefox, Edge)
