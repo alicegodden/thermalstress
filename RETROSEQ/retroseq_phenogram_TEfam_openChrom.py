@@ -62,7 +62,7 @@ def read_dopes_file(dopes_file):
 
 
 # Replace with your VCF file path
-vcf_file = 'MT_HEADERFILTERPY_merged_with_header_USEMEBABY_win150_int_filtered.vcf'
+vcf_file = 'MT_HEADERFILTERPY_merged_with_header_win150_int_filtered.vcf'
 chrom_pos_dict, te_category_dict = extract_chrom_pos_from_vcf(vcf_file)
 
 # Read the chrcen.txt file
