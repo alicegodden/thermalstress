@@ -1,5 +1,3 @@
-# Testing TE counts class unique counts to thermal groups
-
 # =====================================================================
 # Zebrafish de novo TE insertions (treatment-unique) under heat stress
 # Revised Fig 3E/F + GLMM stats (Poisson / negative binomial per family)
@@ -96,3 +94,43 @@ fit_family(df, "Testes")
 fit_family(df, "Ovaries")
 
 message("Done: fig3EF_TE_fourgroup.png, fig3EF_TE_temp_only.png + GLMM output above")
+
+
+
+# --- Option B: temperature-unique only, testes vs ovaries (reviewer's ask) ---
+tmp <- filter(long, Cond == "Temp")
+
+# per-family test: Testes vs Ovaries (Poisson GLM, consistent with other models)
+organ_stats <- lapply(fams, function(f) {
+  d <- tmp %>% filter(TE_type == f)
+  d$Organ <- factor(d$Organ, levels = c("Ovaries", "Testes"))  # Ovaries = reference
+  m <- glm(value ~ Organ, family = poisson, data = d)
+  co <- summary(m)$coefficients
+  data.frame(TE_type = f,
+             p = co["OrganTestes", "Pr(>|z|)"],
+             ymax = max(d$value))
+}) %>% bind_rows() %>%
+  mutate(TE_type = factor(TE_type, levels = fams),
+         star = cut(p, c(-Inf, .001, .01, .05, Inf),
+                    labels = c("***", "**", "*", "ns")))
+
+cat("\n===== Testes vs Ovaries per family (temperature-unique, Poisson GLM) =====\n")
+print(organ_stats[, c("TE_type", "p", "star")])
+
+pB <- ggplot(tmp, aes(TE_type, value, group = Organ, color = Organ)) +
+  geom_jitter(alpha = .2, position = position_jitterdodge(jitter.width = .2, dodge.width = .5)) +
+  stat_summary(fun.data = "mean_cl_boot", geom = "errorbar", linewidth = 1.1, width = 0, position = position_dodge(.5)) +
+  stat_summary(fun.data = "mean_cl_boot", geom = "point", size = 3.2, position = position_dodge(.5)) +
+  stat_summary(fun.data = "mean_cl_boot", geom = "line", linewidth = 1.1, position = position_dodge(.5)) +
+  geom_text(data = organ_stats, aes(x = TE_type, y = ymax + 25, label = star),
+            inherit.aes = FALSE, fontface = "bold", size = 5) +
+  scale_color_manual(values = c("Testes" = "#c85a28", "Ovaries" = "#d98f52")) +
+  labs(y = "Temperature-unique TE count", x = "TE family",
+       title = "Heat-mobilized (temperature-unique) TE insertions: testes vs ovaries") +
+  theme_classic() +
+  theme(plot.title = element_text(size = 15, face = "bold"),
+        axis.title = element_text(size = 14, face = "bold"),
+        axis.text  = element_text(size = 12, face = "bold"),
+        legend.text = element_text(size = 12, face = "bold"),
+        legend.title = element_text(face = "bold"))
+ggsave("fig3EF_TE_temp_only.png", pB, width = 11, height = 5, dpi = 600)
