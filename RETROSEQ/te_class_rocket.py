@@ -1,57 +1,75 @@
-# Title: Plotting manual family counts retroseq
-# Author: Dr. Alice M. Godden
-
-# Title: TE class plots
-# Author: Dr. Alice M. Godden
-
 import matplotlib.pyplot as plt
+import pysam
 import seaborn as sns
-import numpy as np
 
-# Data
-te_classes = ['LINE', 'LTR', 'DNA', 'SATELLITE', 'SINE', 'RC']
-fc_counts = [35, 97, 501, 10, 27, 8]
-ft_counts = [27, 111, 555, 23, 39, 9]
-mc_counts = [25, 130, 564, 25, 32, 11]
-mt_counts = [70, 312, 1740, 60, 114, 44]
-# Define color palette
-rocket_palette = sns.color_palette("rocket", 4)
+def extract_chrom_pos_from_vcf(vcf_file):
+    chrom_pos_dict = {str(i): [] for i in range(1, 26)}
+    with pysam.VariantFile(vcf_file) as vcf:
+        for record in vcf:
+            chromosome = record.chrom
+            if chromosome in chrom_pos_dict:
+                position = record.pos
+                chrom_pos_dict[chromosome].append(position)
+    return chrom_pos_dict
 
-# Create plot
-fig, ax = plt.subplots()
+def read_chrom_lengths(chrom_file):
+    """Read chromosome lengths from file and return a dictionary with lengths in Mb."""
+    chrom_lengths = {}
+    with open(chrom_file, 'r') as f:
+        for line in f:
+            chrom, length = line.strip().split()
+            chrom_lengths[chrom] = int(length) / 1_000_000  # Convert to Mb
+    return chrom_lengths
 
-# Set the width of each bar
-bar_width = 0.2
+# Replace with your VCF file paths
+vcf_files = [
+    'ctrl_female_exp_unique_8_win100_gq750_fl8.vcf',  # Replace with your file paths
+    'female_exp_unique_8_win100_filterpy_gq750_fl8.vcf',
+    'ctrl_male_exp_unique_8_win100_gq750_fl8.vcf',
+    'male_exp_unique_8_win100_filterpy_gq750_fl8.vcf'
+]
+# Corresponding sample names
+sample_names = [
+    'Control_Ovaries',
+    'Thermal_Ovaries',
+    'Control_Testes',
+    'Thermal_Testes'
+]
 
-# Set the positions of the bars
-r1 = np.arange(len(te_classes))
-r2 = [x + bar_width for x in r1]
-r3 = [x + bar_width for x in r2]
-r4 = [x + bar_width for x in r3]
+# Load chromosome lengths (assuming chrom_end.txt has chromosome lengths)
+chrom_lengths = read_chrom_lengths('chrom_end.txt')
 
-# Plot data with specified colors
-bars1 = ax.bar(r1, fc_counts, color=rocket_palette[0], width=bar_width, edgecolor='grey', label='OvariesCtrl')
-bars2 = ax.bar(r2, ft_counts, color=rocket_palette[1], width=bar_width, edgecolor='grey', label='OvariesTemp')
-bars3 = ax.bar(r3, mc_counts, color=rocket_palette[2], width=bar_width, edgecolor='grey', label='TestesCtrl')
-bars4 = ax.bar(r4, mt_counts, color=rocket_palette[3], width=bar_width, edgecolor='grey', label='TestesTemp')
+# Store normalized TE counts for each VCF file
+all_te_counts = []
 
-# Set x-axis labels with bold text and rotation for readability
-ax.set_xlabel('TE Family', fontweight='bold')
-ax.set_ylabel('TE Count', fontweight='bold')
-ax.set_title('TE family counts from Retroseq', fontweight='bold')
-ax.set_xticks([r + 1.5 * bar_width for r in range(len(te_classes))])
-ax.set_xticklabels(te_classes, fontweight='bold')
+# Process each VCF file
+for vcf_file in vcf_files:
+    chrom_pos_dict = extract_chrom_pos_from_vcf(vcf_file)
+    te_counts = {chrom: len(positions) / chrom_lengths.get(chrom, 1) for chrom, positions in chrom_pos_dict.items()}  # Normalize by chromosome length
+    all_te_counts.append(te_counts)
 
-# Set the ticks fontweight
-plt.xticks(fontweight='bold')
-plt.yticks(fontweight='bold')
+# Prepare data for plotting
+chromosomes = list(map(str, range(1, 26)))
+data = {sample_name: [te_counts.get(chrom, 0) for chrom in chromosomes] for sample_name, te_counts in zip(sample_names, all_te_counts)}
 
-# Add legend
-plt.legend()
+# Color palette for the lines
+rocket_palette = sns.color_palette("rocket", len(sample_names))
 
-# Adjust spacing for better layout
-plt.tight_layout()
+# Plotting
+fig, ax = plt.subplots(figsize=(15, 8))
 
-# Save and show plot
-plt.savefig('teclass_retroseq_danio_hs_aug24.png', dpi=600)
+for sample_name, color in zip(sample_names, rocket_palette):
+    ax.plot(chromosomes, data[sample_name], label=sample_name, color=color, marker='o')
+
+# Customizing plot details
+plt.xlabel('Chromosome', fontsize=18, fontweight='bold')
+plt.ylabel('TE counts per Mb', fontsize=18, fontweight='bold')  # Updated label
+plt.title('TEs per Chromosome (Normalized by Length) from Retroseq', fontsize=20, fontweight='bold')
+plt.xticks(fontsize=12, fontweight='bold')
+plt.yticks(fontsize=12, fontweight='bold')
+plt.legend(title='Samples', fontsize=12, title_fontsize=14, loc='upper right')
+
+# Save and display the plot
+output_file = 'TE_counts_per_chromosome_per_MB_fish_HS_retroseq.png'
+plt.savefig(output_file, dpi=1200)
 plt.show()
