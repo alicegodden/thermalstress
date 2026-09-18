@@ -62,6 +62,13 @@ This section contains pre-built multi-omic regulatory networks integrating miRNA
 | **16** | `16-thermal_testes.zip` | Thermal Stress | ♂️ Testes |
 | **17** | `17-heatstress_ovaries.zip` | Heat Stress | ♀️ Ovaries |
 
+### Transgenerational analysis
+
+Raw data for transgenerational analysis of parental thermal stress.
+
+| ID | Filepath | Condition | Sex |
+| **18** | `data set including non breeding pairs.xlsx` | Heat Stress | Breeding data |
+
 
 ### 🧭 Usage
 
