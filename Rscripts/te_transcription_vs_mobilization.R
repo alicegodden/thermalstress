@@ -1,6 +1,6 @@
 # =====================================================================
 # Age of transcriptionally active vs mobilized TEs under thermal stress
-# (reviewer L203-207: plot + stats for transcriptional TE age, and
+# plot + stats for transcriptional TE age, and
 #  compare with the mobilized/active subset from RetroSeq)
 #
 #  - Transcribed set : TETranscripts DESeq2 DE TEs (padj < 0.05), by class
