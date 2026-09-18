@@ -14,21 +14,24 @@ library(dplyr); library(tidyr); library(ggplot2)
 CLASSES <- c("DNA","LINE","LTR","SINE","RC","Satellite")
 PADJ <- 0.05
 
-map_class <- function(x) {
-  x <- toupper(as.character(x))
-  for (cl in CLASSES) if (x == toupper(cl)) return(cl)
-  if (grepl("SATELLITE", x)) return("Satellite")
-  if (x %in% c("RC","HELITRON")) return("RC")
-  NA_character_
+# Telescope feature names are "Family_dupN"; map the FAMILY to a broad class
+map_class <- function(fam) {
+  f <- toupper(fam)
+  if (grepl("HELITRON", f)) return("RC")
+  if (grepl("GYPSY|COPIA|ERV|BEL-|BEL_|PAO|DIRS|LRS|NGARO|GYPSYDR|-LTR", f)) return("LTR")
+  if (grepl("CR1|REX|L1-|L2-|L2_|RTE|JOCKEY|I-3|LOOPER|TDR7|TDR23|TDR16|KIRI", f)) return("LINE")
+  if (grepl("MOSAT|BRSAT|SAT-|CENSAT|MSAT|\\(", f)) return("Satellite")
+  # everything else recognisable is a DNA transposon in zebrafish
+  "DNA"
 }
 
 # ---- transcribed set: DE TE class fractions (padj < 0.05) -----------
 de_class_weights <- function(path) {
   d <- read.csv(path, row.names = 1)
   colnames(d) <- c("baseMean","log2FoldChange","lfcSE","stat","pvalue","padj")
-  cls <- sapply(strsplit(rownames(d), ":"), function(v) map_class(tail(v, 1)))
-  d$Class <- cls
-  sig <- d[!is.na(d$padj) & d$padj < PADJ & !is.na(d$Class), ]
+  family <- sub("_dup[0-9]+$", "", rownames(d))
+  d$Class <- vapply(family, map_class, character(1))
+  sig <- d[!is.na(d$padj) & d$padj < PADJ, ]
   if (nrow(sig) == 0) return(list(w = NULL, n = 0))
   tab <- table(sig$Class)
   list(w = setNames(as.numeric(tab)/sum(tab), names(tab)), n = nrow(sig))
@@ -64,8 +67,8 @@ weighted_age_dist <- function(divsum_path, weights) {
 
 # ---- build per organ, plot, and KS-test ----------------------------
 inputs <- list(
-  Ovary  = list(de = "5-_ov_tetrans_deseq2.csv",            divsum = "FT_all.divsum.csv"),
-  Testis = list(de = "4-_te_tetrans_deseq2.csv",            divsum = "MT_all.divsum.csv"))
+  Ovary  = list(de = "11-female_telescope_deseq2.csv", divsum = "FT_all.divsum.csv"),
+  Testis = list(de = "10-male_telescope_deseq2.csv",   divsum = "MT_all.divsum.csv"))
 
 plot_df <- list(); ks_lines <- c()
 for (organ in names(inputs)) {
