@@ -66,7 +66,8 @@ This section contains pre-built multi-omic regulatory networks integrating miRNA
 
 Raw data for transgenerational analysis of parental thermal stress.
 
-| ID | Filepath | Condition | Sex |
+| ID | Filepath | Description |
+| :---: | :--- | :--- |
 | **18** | `data set including non breeding pairs.xlsx` | Heat Stress | Breeding data |
 
 
