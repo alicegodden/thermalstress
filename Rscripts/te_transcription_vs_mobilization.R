@@ -93,16 +93,31 @@ for (organ in names(inputs)) {
   d <- d %>% group_by(set) %>% mutate(density = bp / sum(bp)) %>% ungroup()
   plot_df[[organ]] <- d
 }
-alld <- bind_rows(plot_df)
-cat("\n===== Transcribed vs mobilized TE age =====\n"); cat(paste(ks_lines, collapse = "\n"), "\n")
+# col
 
-p <- ggplot(alld, aes(Div, density, colour = set)) +
+p
+
+# add stats
+# ---- collapse per-facet transcribed labels to one colour group ----
+alld$set_grp <- ifelse(grepl("^Transcribed", alld$set), "Transcribed (DE)", alld$set)
+alld$set_grp <- factor(alld$set_grp,
+                       levels = c("Genome-wide", "Mobilized (RetroSeq)", "Transcribed (DE)"))
+
+# ---- per-facet stats annotation (edit numbers if you rerun) -------
+annot <- data.frame(
+  Organ = c("Ovary", "Testis"),
+  label = c("n = 13 DE\nKS P < 2.2e-16\ntrans 7.8 vs mob 10.3",
+            "n = 87 DE\nKS P = 7.3e-4\ntrans 7.5 vs mob 7.7"))
+
+p <- ggplot(alld, aes(Div, density, colour = set_grp)) +
   geom_line(linewidth = 1.2) +
   facet_wrap(~ Organ) +
-  scale_colour_manual(values = c("Mobilized (RetroSeq)" = "#c85a28",
-                                 "Genome-wide" = "grey50"),
-                      # transcribed level name varies with n; add by pattern
-                      limits = function(x) x) +
+  geom_text(data = annot, aes(x = 26, y = 0.15, label = label),
+            inherit.aes = FALSE, hjust = 0, vjust = 1,
+            fontface = "bold", size = 3, lineheight = 0.95) +
+  scale_colour_manual(values = c("Genome-wide"          = "grey50",
+                                 "Mobilized (RetroSeq)" = "#c85a28",
+                                 "Transcribed (DE)"     = "#2c5f9e")) +
   coord_cartesian(xlim = c(0, 40)) +
   labs(x = "Kimura substitution level (age)", y = "Relative density", colour = NULL,
        title = "Age of transcriptionally active vs mobilized TEs under thermal stress") +
@@ -112,5 +127,6 @@ p <- ggplot(alld, aes(Div, density, colour = set)) +
         axis.text  = element_text(size = 11, face = "bold"),
         strip.text = element_text(size = 12, face = "bold"),
         legend.text = element_text(face = "bold"))
+
 ggsave("fig_TE_transcribed_vs_mobilized_age.png", p, width = 12, height = 5.5, dpi = 600)
-message("Done: fig_TE_transcribed_vs_mobilized_age.png")
+p
