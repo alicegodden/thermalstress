@@ -26,7 +26,7 @@ def get_chrom_end(chrom):
 
 
 # Replace 'your_vcf_file.vcf' with the path to your VCF file
-vcf_file = 'FT_HEADERFILTERPY_merged_with_header_USEMEBABY_win150_int_filtered.vcf'
+vcf_file = 'FT_HEADERFILTERPY_merged_with_header__win150_int_filtered.vcf'
 chrom_pos_dict = extract_chrom_pos_from_vcf(vcf_file)
 
 # Read the chrcen.txt file
