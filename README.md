@@ -77,6 +77,7 @@ A collection of analysis scripts for water quality, genomics, TE insertion studi
 | `features_heatmap_2_rows.py` | Heatmap with Fisher’s & Odds ratio testing |
 | `retroseq_loci_heatmap.py` | Heatmap of TE insertion loci with enrichment analysis |
 | `retroseq_ensembl_vep.py` | Ensembl VEP analysis of Retroseq outputs- heatmap and bar chart |
+| `retroseq_simple_chrom_plot.py` | Simple revised chromosomal TE insertion plot |
 
 
 
