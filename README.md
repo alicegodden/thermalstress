@@ -57,6 +57,7 @@ A collection of analysis scripts for water quality, genomics, TE insertion studi
 | `vcfinput_phenogram.py` | Phenogram plot |
 | `autobubble_goplot.py` | GO terms plotting (.csv from ShinyGO) with annotated p-values |
 | `unique.py` | Filtering non-unique rows from Retroseq outputs to create unique variants file |
+| `snpeff_fig4.py` | Generation of Fig.4 plotting snps for ctrl v temp snpeff snpsift cc |
 
 
 #### 🧪 Retroseq Analysis  
