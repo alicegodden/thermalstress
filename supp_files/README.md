@@ -70,6 +70,14 @@ Raw data for transgenerational analysis of parental thermal stress.
 | :---: | :--- | :--- |
 | **18** | `data set including non breeding pairs.xlsx` | Heat Stress | Breeding data |
 
+### miRanda analysis
+
+MiRNA gene targeting analysis from DE genes and zebrafish 3' UTRs for miRNA:mRNA target prediction
+
+| ID | Filepath | Description |
+| :---: | :--- | :--- |
+| **19** | `19-output_tab_with_csv_TESTES.tab.txt` | Heat Stress | Testes |
+| **20** | `20-output_tab_with_csv_OVARIES.tab.txt` | Heat Stress | Ovaries |
 
 ### 🧭 Usage
 
