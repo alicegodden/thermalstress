@@ -77,7 +77,7 @@ MiRNA gene targeting analysis from DE genes and zebrafish 3' UTRs for miRNA:mRNA
 | ID | Filepath | Description |
 | :---: | :--- | :--- |
 | **19** | `19-output_tab_with_csv_TESTES.tab.txt` | Heat Stress | Testes |
-| **20** | `20-output_tab_with_csv_OVARIES.tab.txt` | Heat Stress | Ovaries |
+| **20** | `20-output_tab_with_csv_OVARIES.tab.txt.zip` | Heat Stress | Ovaries |
 
 ### 🧭 Usage
 
