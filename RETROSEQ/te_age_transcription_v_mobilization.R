@@ -28,11 +28,12 @@ inputs <- list(
   Ovary  = list(de = "11-female_telescope_deseq2.csv", divsum = "FT_all.divsum.csv"),
   Testis = list(de = "10-male_telescope_deseq2.csv",   divsum = "MT_all.divsum.csv"))
 
-# private (single-fish) insertions at 34°C by class, summed over 6 fish
-# (from private_TE_by_treatment.tsv)
+
+# private (across-all-24-fish) insertions at 34°C by class, summed over 6 fish
+# (from TE_unique_perfish_summary.tsv, 34°C rows)
 mob_counts <- list(
-  Ovary  = c(DNA = 893,  LINE = 96,  LTR = 193, SINE = 53, RC = 21, Satellite = 15),
-  Testis = c(DNA = 1118, LINE = 132, LTR = 244, SINE = 89, RC = 16, Satellite = 39))
+  Ovary  = c(DNA = 531, LINE = 57, LTR = 109, SINE = 30, RC = 13, Satellite = 7),
+  Testis = c(DNA = 794, LINE = 85, LTR = 147, SINE = 52, RC = 8,  Satellite = 25))
 
 # ---- TE family -> broad class (Telescope names are "Family_dupN") ----
 map_class <- function(fam) {
