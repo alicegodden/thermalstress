@@ -3,13 +3,13 @@
 #   Instead of the genome-wide Kimura landscape (dominated by ancient,
 #   fixed copies), focus on the ACTIVE subset: non-reference TE insertions
 #   PRIVATE to a single fish (RetroSeq, called per fish; absent from every
-#   other fish of the same tissue within 100 bp), summed over the 6 fish
-#   of each group.
+#   other fish across ALL 24 individuals, both tissues and both temperatures,
+#   within 100 bp), summed over the 6 fish of each group.
 #
 #   RetroSeq reports the broad TE CLASS of each insertion, so the analysis
 #   is done at class level:
 #   (1) class composition of private insertions vs genome-wide background,
-#       at 34°C (heat) and 28°C (control), per organ
+#       at 34C (heat) and 28C (control), per organ
 #   (2) heat vs control class composition (does heat change WHICH classes move?)
 #   (3) a repeat landscape reweighted to the heat-exposed private set's classes
 #
@@ -26,17 +26,20 @@ CLASS_COL <- c(DNA = "#4c1d4b", LINE = "#812581", LTR = "#b63679",
 
 # ---------------------------------------------------------------------
 # INPUTS
-#   Private insertions: either read the private-only VCFs written by
-#   private_TE_per_fish_interim.py (PRIVATE_ROOT), or fall back to the
-#   summed counts below (from private_TE_by_treatment.tsv).
+#   Private insertions: either read the per-fish private VCFs written by the
+#   across-24 private-filter script (PRIVATE_ROOT = .../private_across_all24),
+#   or fall back to the summed counts below (also the across-24 numbers, from
+#   TE_unique_perfish_summary.tsv).
 # ---------------------------------------------------------------------
-PRIVATE_ROOT <- "/Users/alicegodden/PycharmProjects/heatstressvariants/miranda/vcf/private_uniq"
+PRIVATE_ROOT <- "/Users/alicegodden/PycharmProjects/heatstressvariants/miranda/vcf/private_across_all24"
 
+# across-24 private insertions by class, summed over the 6 fish of each group
+# (from TE_unique_perfish_summary.tsv: ovary 758/747, testis 698/1111)
 private_counts_fallback <- list(
-  Ovary  = list(`34C` = c(DNA = 893,  LINE = 96,  LTR = 193, SINE = 53, RC = 21, Satellite = 15),
-                `28C` = c(DNA = 858,  LINE = 103, LTR = 206, SINE = 46, RC = 13, Satellite = 26)),
-  Testis = list(`34C` = c(DNA = 1118, LINE = 132, LTR = 244, SINE = 89, RC = 16, Satellite = 39),
-                `28C` = c(DNA = 756,  LINE = 59,  LTR = 149, SINE = 50, RC = 9,  Satellite = 23)))
+  Ovary  = list(`34C` = c(DNA = 531, LINE = 57, LTR = 109, SINE = 30, RC = 13, Satellite = 7),
+                `28C` = c(DNA = 516, LINE = 64, LTR = 125, SINE = 31, RC = 8,  Satellite = 14)),
+  Testis = list(`34C` = c(DNA = 794, LINE = 85, LTR = 147, SINE = 52, RC = 8,  Satellite = 25),
+                `28C` = c(DNA = 510, LINE = 38, LTR = 90,  SINE = 35, RC = 9,  Satellite = 16)))
 
 divsum_files <- c(Ovary = "FT_all.divsum.csv", Testis = "MT_all.divsum.csv")
 private_dirs <- list(Ovary  = c(`34C` = "ovaries/treatment", `28C` = "ovaries/control"),
@@ -114,7 +117,7 @@ for (organ in names(divsum_files)) {
       chisq_vs_genome_p = chi$p.value)
   }
   
-  # (2) heat vs control class composition (classes with < 5 expected merged into "Other")
+  # (2) heat vs control class composition (rare classes merged into "Other")
   tab <- rbind(`34C` = cnt[["34C"]], `28C` = cnt[["28C"]])
   small <- colSums(tab) < 20
   if (any(small)) tab <- cbind(tab[, !small, drop = FALSE], Other = rowSums(tab[, small, drop = FALSE]))
@@ -171,7 +174,7 @@ p1 <- ggplot(enrich_tab, aes(Class, enrichment, fill = Temperature)) +
   scale_y_continuous(trans = "log2", breaks = c(.125, .25, .5, 1, 2, 4)) +
   labs(x = "TE class", y = "Enrichment among private insertions\n(private % / genome-wide %)",
        title = "Class composition of private TE insertions relative to the genome",
-       subtitle = "Insertions private to a single fish, summed over 6 fish per group") +
+       subtitle = "Insertions private across all 24 fish, summed over 6 fish per group") +
   theme_fig
 ggsave("fig_private_TE_enrichment.png", p1, width = 11, height = 5.5, dpi = 600)
 ggsave("fig_private_TE_enrichment.pdf", p1, width = 11, height = 5.5)
@@ -179,7 +182,7 @@ print(p1)
 
 # =====================================================================
 # FIGURE 2 - active-subset repeat landscape (class-reweighted Kimura),
-# weighted by the 34°C private set
+# weighted by the 34C private set
 # =====================================================================
 land <- bind_rows(landscape_all)
 land$Class <- factor(land$Class, levels = CLASSES)
