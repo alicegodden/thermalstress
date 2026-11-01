@@ -1,27 +1,31 @@
 #!/usr/bin/env python3
 """
-Interim step: keep only TE insertions PRIVATE to one fish (within tissue), write a filtered VCF
-per fish, and sum by treatment.
+Keep only TE insertions PRIVATE to ONE fish ACROSS ALL 24 FISH (both tissues, both
+treatments), write a filtered VCF per fish, and sum by treatment.
+
+An insertion is PRIVATE only if no OTHER fish in the whole experiment -- regardless of
+tissue or temperature -- has a call within --window bp. This removes insertions shared
+between any two individuals (including a male and a female), which are inherited
+(shared-ancestry) polymorphisms rather than events arising during the experiment.
+Ovaries and testes are still reported separately in the output tables.
 
 Input layout (default --root):
   <root>/ovaries/control/*.vcf   <root>/ovaries/treatment/*.vcf
   <root>/testes/control/*.vcf    <root>/testes/treatment/*.vcf
-  (one RetroSeq VCF per fish; .vcf or .vcf.gz; control = 28°C, treatment = 34°C)
+  (one RetroSeq VCF per fish; .vcf or .vcf.gz; control = 28 C, treatment = 34 C)
 
-Steps, separately for ovaries and testes:
+Steps:
   1. Read calls on chr 1-25 with a non-reference genotype (and FL == --fl if FL present).
-  2. (Only with --collapse) merge calls within --window bp in the same fish into one insertion.
-     By default every call is kept; nearby calls in the same fish are NOT merged or removed.
-  3. Private = no other fish of the SAME tissue (control or treatment) has a call within --window bp
-     (default 100 bp, any TE class). Everything else is removed.
-Outputs (in --outdir, default <root>/private_uniq):
-  <tissue>/<control|treatment>/<fish>.private.vcf   - original VCF lines of private insertions only
-  private_TE_per_fish.tsv        - per fish: calls, after collapsing, private, by TE class
-  private_TE_by_treatment.tsv    - summed per tissue x treatment (+ mean, SD per fish)
+  2. (Only with --collapse) merge calls within --window bp in the same fish into one.
+  3. Private = NO other fish in the ENTIRE dataset (all 24, both tissues, both treatments)
+     has a call within --window bp (default 100 bp, any TE class). Everything else removed.
+Outputs (in --outdir, default <root>/private_across_all24):
+  <tissue>/<control|treatment>/<fish>.private.vcf
+  private_TE_per_fish.tsv
+  private_TE_by_treatment.tsv
 
 Usage:
-  python private_TE_per_fish_interim.py
-  python private_TE_per_fish_interim.py --root /path/to/vcf --window 100
+  python private_TE_across_all24.py --root /path/to/vcf --window 100
 """
 import argparse, gzip, re
 from pathlib import Path
@@ -55,15 +59,16 @@ def main():
     ap.add_argument("--outdir", default=None)
     ap.add_argument("--window", type=int, default=100)
     ap.add_argument("--collapse", action="store_true",
-                    help="merge calls within --window bp in the SAME fish into one (off by default: every call kept)")
+                    help="merge calls within --window bp in the SAME fish into one (off by default)")
     ap.add_argument("--fl", type=int, default=8, help="keep calls with this FL flag (0 = no filter)")
     a = ap.parse_args()
     root = Path(a.root)
-    outdir = Path(a.outdir) if a.outdir else root / "private_uniq"
+    outdir = Path(a.outdir) if a.outdir else root / "private_across_all24"
 
     outdir.mkdir(parents=True, exist_ok=True)
     vcfs = sorted(p for p in root.rglob("*") if p.name.endswith((".vcf", ".vcf.gz"))
-                  and outdir not in p.parents and "private_uniq" not in p.parts
+                  and outdir not in p.parents and "private_across_all24" not in p.parts
+                  and "private_uniq" not in p.parts
                   and not p.name.endswith((".private.vcf", ".private.vcf.gz")))
     rows, headers, files = [], {}, []
     for p in vcfs:
@@ -89,22 +94,16 @@ def main():
         headers[fish] = hdr
     if not rows: raise SystemExit(f"no calls read under {root}")
     fl = pd.DataFrame(files)
-
-    # warn if control and treatment files were processed differently (e.g. '_uniq_' only in one group)
-    for tissue in fl.tissue.unique():
-        tags = {t: {"uniq" in f.lower() for f in fl[(fl.tissue == tissue) & (fl.treatment == t)].file}
-                for t in ("control", "treatment")}
-        if tags["control"] != tags["treatment"]:
-            print(f"\nWARNING ({tissue}): 'uniq' appears in the file names of only one group "
-                  f"(control: {tags['control']}, treatment: {tags['treatment']}).\n"
-                  "  If those files already had insertions shared with the other group removed, a control\n"
-                  "  insertion whose heat copy was deleted will now look private, inflating that group.\n"
-                  "  For a fair comparison, give both groups files from the SAME processing step.\n")
+    n_fish_total = fl.fish.nunique()
+    print(f"\nRead {n_fish_total} fish: "
+          + ", ".join(f"{t} {len(g)}" for t, g in fl.groupby('tissue')))
+    if n_fish_total != 24:
+        print(f"  NOTE: expected 24 fish, found {n_fish_total} -- check the folder tree.")
 
     d = pd.DataFrame(rows)
     n_calls = d.groupby("fish").size()
 
-    # 1) optional: collapse within fish (off by default - every call is kept)
+    # 1) optional: collapse within fish (off by default)
     d = d.sort_values(["fish", "chrn", "pos"])
     keep, last = ([], {}) if a.collapse else (list(d.index), None)
     for idx, f, ch, p in (zip(d.index, d.fish, d.chrn, d.pos) if a.collapse else []):
@@ -114,9 +113,11 @@ def main():
     d = d.loc[keep].copy()
     n_coll = d.groupby("fish").size()
 
-    # 2) private within tissue
+    # 2) PRIVATE ACROSS ALL 24 FISH -- group by chromosome only, so every fish in the
+    #    experiment (both tissues, both treatments) is compared. An insertion is dropped
+    #    if ANY other fish has a call within --window bp.
     d["private"] = True
-    for _, g in d.groupby(["tissue", "chrn"]):
+    for _, g in d.groupby(["chrn"]):
         o = np.argsort(g.pos.to_numpy(), kind="stable")
         pos, fish, idx = g.pos.to_numpy()[o], g.fish.to_numpy()[o], g.index.to_numpy()[o]
         bad = np.zeros(len(pos), bool)
@@ -147,7 +148,7 @@ def main():
     per = per.join(cls[TE_ORDER]).fillna(0)
     for c in ["calls", "after_collapsing", "private"] + TE_ORDER: per[c] = per[c].astype(int)
     per = per.reset_index().sort_values(["tissue", "treatment", "fish"])
-    per.insert(3, "temperature", per.treatment.map({"control": "28°C", "treatment": "34°C"}))
+    per.insert(3, "temperature", per.treatment.map({"control": "28C", "treatment": "34C"}))
     per.to_csv(outdir / "private_TE_per_fish.tsv", sep="\t", index=False)
 
     summ = per.groupby(["tissue", "treatment", "temperature"]).agg(
@@ -160,7 +161,7 @@ def main():
 
     pd.set_option("display.width", 250); pd.set_option("display.max_columns", 30)
     short = per.copy(); short["fish"] = short.fish.str.extract(r"_(\d+[FM][CT])_", expand=False).fillna(short.fish)
-    print(f"\nPrivate insertions per fish (within tissue, window {a.window} bp):")
+    print(f"\nPrivate insertions per fish (unique across ALL {n_fish_total} fish, window {a.window} bp):")
     print(short[["tissue", "temperature", "fish", "calls", "after_collapsing", "private"]].to_string(index=False))
     print("\nSummed by treatment:")
     print(summ.to_string(index=False))
