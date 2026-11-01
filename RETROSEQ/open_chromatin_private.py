@@ -171,14 +171,15 @@ def main():
     ap.add_argument("--te-ctrl", default=str(here / "ctrl_male_exp_unique_8_win100_gq750_fl8.vcf"))
     ap.add_argument("--te-heat", default=str(here / "male_exp_unique_8_win100_filterpy_gq750_fl8.vcf"))
     ap.add_argument("--private-root",
-                    default="/Users/alicegodden/PycharmProjects/heatstressvariants/miranda/vcf/private_uniq",
-                    help="folder written by private_TE_per_fish_interim.py; used if it exists "
-                         "(per-fish private insertions). Otherwise the four pooled VCFs below are used.")
+                    default="/Users/alicegodden/PycharmProjects/heatstressvariants/miranda/vcf/private_across_all24",
+                    help="folder of across-24 private per-fish VCFs "
+                         "(<tissue>/<control|treatment>/<fish>.private.vcf); used if it exists. "
+                         "Otherwise the four pooled VCFs below are used.")
     ap.add_argument("--dopes", default=str(here / "daniocode_hub_280355_dopes_all.txt"))
     ap.add_argument("--window", type=int, default=100)
-    ap.add_argument("--scope", choices=["tissue", "all"], default="tissue",
-                    help="tissue: unique vs the other temperature of the SAME tissue (default); "
-                         "all: unique vs all other datasets, both tissues")
+    ap.add_argument("--scope", choices=["tissue", "all"], default="all",
+                    help="all: unique vs all 24 fish (default, matches the rest of Fig 3); "
+                         "tissue: unique vs the other temperature of the SAME tissue")
     ap.add_argument("--flanks", default="0,1000,5000", help="comma-separated bp distances")
     ap.add_argument("--perm", type=int, default=10000)
     ap.add_argument("--min-n", type=int, default=10, help="skip TE classes with fewer insertions")
