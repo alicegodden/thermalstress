@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
 """
 Non-reference TE insertions (RetroSeq) from PER-FISH VCFs - mirrored chromosome maps of unique
-insertions, judged WITHIN each tissue (ovaries and testes handled separately; fish of the other
-tissue are never used). Same plot style as te_chromosome_map_mirrored.py:
-28°C insertions LEFT of each chromosome, 34°C RIGHT, coloured by TE class.
+insertions. With --scope all (default) an insertion is private only if NO other fish in the whole
+experiment (all 24 fish, both tissues and both temperatures) carries a call within --window bp, so
+insertions shared between individuals (inherited, shared-ancestry polymorphisms) are dropped. With
+--scope tissue the comparison is within each tissue only (fish of the other tissue ignored).
+28 C insertions LEFT of each chromosome, 34 C RIGHT, coloured by TE class.
 
---mode private (default): an insertion is plotted only if it is called in ONE fish of that tissue.
-   If any other fish of the same tissue (either temperature) has a call on the same chromosome
-   within --window bp (default 100 bp, any TE class), it is dropped.
+--mode private (default): an insertion is plotted only if it is called in ONE fish. If any other
+   fish (per --scope) has a call on the same chromosome within --window bp, it is dropped.
 --mode temperature: an insertion is plotted if no fish of the OTHER temperature (same tissue) has
    it; it may be shared by several fish at the same temperature (plotted once).
 Nearby calls in the same fish are kept as separate calls (merge them with --collapse).
@@ -15,13 +16,13 @@ Chromosomes 1-25 only.
 
 Input: per-fish RetroSeq VCFs (one per fish, or multi-sample VCFs with one column per fish).
 Fish, tissue and temperature are read from sample/file names such as "..._12FC_..." or
-"..._22MT_..." (F/M = ovaries/testes, C/T = 28°C/34°C), or from --samplesheet
+"..._22MT_..." (F/M = ovaries/testes, C/T = 28 C/34 C), or from --samplesheet
 (TSV: sample  tissue  temperature  vcf). Pooled/merged samples are skipped with a warning.
 
 Usage:
-  python te_map_unique_per_fish.py            # reads --root folder layout (default: your miranda/vcf)
-  python te_map_unique_per_fish.py --vcfs "per_fish/*.vcf"
-  python te_map_unique_per_fish.py --vcfs "per_fish/*.vcf" --mode temperature
+  python te_map_unique_per_fish.py                       # reads --root folder layout; --scope all
+  python te_map_unique_per_fish.py --scope all --mode private
+  python te_map_unique_per_fish.py --vcfs "per_fish/*.vcf" --scope all
 Writes per tissue: TE_map_unique_perfish_<tissue>.pdf/.png/.svg + _insertions.tsv,
 plus TE_unique_perfish_summary.tsv (per group) and TE_unique_perfish_counts.tsv (per fish).
 """
@@ -39,8 +40,8 @@ mpl.rcParams.update({
     "font.family": "sans-serif",
     "font.sans-serif": ["Arial", "Helvetica", "Liberation Sans", "FreeSans", "DejaVu Sans"],
     "font.weight": "bold", "axes.labelweight": "bold", "axes.titleweight": "bold",
-    "font.size": 8, "axes.titlesize": 9, "axes.labelsize": 8,
-    "xtick.labelsize": 7, "ytick.labelsize": 7, "legend.fontsize": 7,
+    "font.size": 10, "axes.titlesize": 11, "axes.labelsize": 10,
+    "xtick.labelsize": 9, "ytick.labelsize": 9, "legend.fontsize": 9,
     "axes.spines.top": False, "axes.spines.right": False,
     "pdf.fonttype": 42, "svg.fonttype": "none",
 })
@@ -95,6 +96,7 @@ def read_root(root, fl=8, min_gq=0.0):
     GQ >= min_gq and a non-reference genotype."""
     vcfs = sorted(p for p in Path(root).rglob("*") if p.name.endswith((".vcf", ".vcf.gz"))
                   and "private_uniq" not in p.parts            # skip outputs of the interim script
+                  and "private_across_all24" not in p.parts
                   and not p.name.endswith((".private.vcf", ".private.vcf.gz")))
     rows, skipped, log = [], [], []
     for path in vcfs:
@@ -188,10 +190,16 @@ def collapse_per_fish(d, window):
     return d.loc[keep].copy()
 
 
-def flag_unique(d, window, mode):
-    """Within each tissue: mark calls as unique (private to one fish, or absent from other temperature)."""
+def flag_unique(d, window, mode, scope="all"):
+    """Mark calls as unique. scope='all': compare against ALL 24 fish (both tissues, both
+    temperatures) -- an insertion is private only if no other fish anywhere in the experiment
+    shares it, so inherited (shared-ancestry) insertions carried by a male and a female are
+    dropped. scope='tissue': compare within each tissue only. In --mode temperature the clash is
+    by temperature rather than by fish (always within tissue)."""
     d = d.copy(); d["unique"] = True
-    for _, g in d.groupby(["tissue", "chrn"]):
+    # temperature mode is defined within tissue; private mode honours --scope
+    groups = ["chrn"] if (scope == "all" and mode == "private") else ["tissue", "chrn"]
+    for _, g in d.groupby(groups):
         o = np.argsort(g.pos.to_numpy(), kind="stable")
         pos = g.pos.to_numpy()[o]; fish = g.fish.to_numpy()[o]
         temp = g.temperature.to_numpy()[o]; idx = g.index.to_numpy()[o]
@@ -284,6 +292,9 @@ def main():
     ap.add_argument("--fl", type=int, default=8, help="keep RetroSeq calls with this FL flag (0 = no filter)")
     ap.add_argument("--min-gq", type=float, default=0, help="minimum GQ per call (pooled files used 750)")
     ap.add_argument("--mode", choices=["private", "temperature"], default="private")
+    ap.add_argument("--scope", choices=["tissue", "all"], default="all",
+                    help="private mode only: tissue = unique vs other fish of the SAME tissue; "
+                         "all = unique vs all 24 fish (default, matches the stats and panels C-D)")
     ap.add_argument("--dopes", default=str(here / "daniocode_hub_280355_dopes_all.txt"))
     ap.add_argument("--window", type=int, default=100)
     ap.add_argument("--colour", choices=["class", "group"], default="class")
@@ -298,7 +309,9 @@ def main():
     else:
         d = read_root(a.root, a.fl, a.min_gq)
     if a.collapse: d = collapse_per_fish(d, a.window)
-    d = flag_unique(d, a.window, a.mode)
+    d = flag_unique(d, a.window, a.mode, a.scope)
+    scope_txt = "all 24 fish" if (a.scope == "all" and a.mode == "private") else "within tissue"
+    print(f"\nuniqueness scope: {scope_txt}")
     fish = d[["fish", "tissue", "temperature"]].drop_duplicates().sort_values(["tissue", "temperature", "fish"])
     print("fish per group:\n" + fish.groupby(["tissue", "temperature"]).size().to_string())
 
@@ -312,7 +325,7 @@ def main():
     dopes = read_dopes(a.dopes) if Path(a.dopes).exists() else []
     print(f"open chromatin: {len(dopes)} regions" if dopes else
           f"open chromatin file not found ({a.dopes}) - plotting without it")
-    title = ("fish-private non-reference TE insertions" if a.mode == "private"
+    title = ("private non-reference TE insertions" if a.mode == "private"
              else "temperature-unique non-reference TE insertions")
     rows = []
     for tissue in ("Ovaries", "Testes"):
@@ -340,7 +353,7 @@ def main():
         plt.close(fig)
     tab = pd.DataFrame(rows)
     pd.set_option("display.width", 200)
-    print(f"\nmode: {a.mode} (within tissue, window {a.window} bp)")
+    print(f"\nmode: {a.mode} ({scope_txt}, window {a.window} bp)")
     print(tab.to_string(index=False))
     tab.to_csv(Path(a.outdir) / "TE_unique_perfish_summary.tsv", sep="\t", index=False)
 
